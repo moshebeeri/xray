@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.XR;
-using UnityEngine.XR;
 using Debug = UnityEngine.Debug;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id" xmlns:tools="http://schemas.android.com/tools">
+  <string name="gcm_defaultSenderId" translatable="false">597113964843</string>
+  <string name="google_storage_bucket" translatable="false">xray-vr.appspot.com</string>
+  <string name="project_id" translatable="false">xray-vr</string>
+  <string name="google_api_key" translatable="false">AIzaSyDMFiHKIG1YAdeEOictOozNptGqap8HKQw</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDMFiHKIG1YAdeEOictOozNptGqap8HKQw</string>
+  <string name="google_app_id" translatable="false">1:597113964843:android:76895f8e78edd5d93f5d6e</string>
+  <string name="default_web_client_id" translatable="false">597113964843-q8l3tbkd3p9fc3u7nu6gqfvkk97si09v.apps.googleusercontent.com</string>
+</resources>

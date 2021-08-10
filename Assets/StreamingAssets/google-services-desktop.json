@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "597113964843",
+    "project_id": "xray-vr",
+    "storage_bucket": "xray-vr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597113964843:android:76895f8e78edd5d93f5d6e",
+        "android_client_info": {
+          "package_name": "com.xyray"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597113964843-q8l3tbkd3p9fc3u7nu6gqfvkk97si09v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMFiHKIG1YAdeEOictOozNptGqap8HKQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597113964843-q8l3tbkd3p9fc3u7nu6gqfvkk97si09v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
