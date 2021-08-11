@@ -291,7 +291,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Back to menu
 --- !u!222 &201495797
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -337,7 +337,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 45}
+  m_AnchoredPosition: {x: -391.99997, y: 1}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &224843717
@@ -505,6 +505,10 @@ PrefabInstance:
       propertyPath: rayTransform
       value: 
       objectReference: {fileID: 91765691}
+    - target: {fileID: 114043904411177872, guid: a9d2de84afb308a4796cc671d3432b4d, type: 3}
+      propertyPath: joyPadClickButton
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 120006741097097638, guid: a9d2de84afb308a4796cc671d3432b4d, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -656,6 +660,7 @@ GameObject:
   - component: {fileID: 466947875}
   - component: {fileID: 466947874}
   - component: {fileID: 466947873}
+  - component: {fileID: 466947876}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -680,7 +685,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -392, y: -44}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &466947873
@@ -727,16 +732,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 224843717}
-        m_TargetAssemblyTypeName: UnityEngine.UI.InputField, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 5
+      - m_Target: {fileID: 466947876}
+        m_TargetAssemblyTypeName: Loader, Assembly-CSharp
+        m_MethodName: LoadMainScene
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: WOW
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &466947874
@@ -777,6 +782,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 466947871}
   m_CullTransparentMesh: 1
+--- !u!114 &466947876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466947871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb376695e4b6476b9d3cd751f18dc43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  go: {fileID: 0}
 --- !u!1 &626321179
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,7 +961,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

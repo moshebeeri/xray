@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AugmentedScene.unity
     guid: db03e7074e7e546b3ac4e4e6987bd6ed
+  - enabled: 1
+    path: Assets/Scenes/LocationMapScene.unity
+    guid: b45b77a8d5a624c17ba5d9ac37996ed5
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3af63c10a0d4745e18e0d402d221d379, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: abb7174b586d24f7bb1c4a7d4b0a51e1, type: 2}

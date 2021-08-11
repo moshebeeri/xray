@@ -22,11 +22,18 @@ public class Loader : MonoBehaviour
 
     }
 
+    public static void LoadMainScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     public static void LoadAugmentedScene()
     {
-        // go = GetComponent<Button>();
-        // Text text = go.GetComponent<Text>();
-        // text.text = "yo";
         SceneManager.LoadScene(1);
+    }
+
+    public static void LoadMapScene()
+    {
+        SceneManager.LoadScene(2);
     }
 }
