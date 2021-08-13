@@ -1,65 +1,68 @@
-using System.Diagnostics;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Auth;
 using TMPro;
-using System.Threading.Tasks;
-using System;
-using Debug  = UnityEngine.Debug;
 
 public class AuthManager : MonoBehaviour
 {
+    //Firebase variables
+    [Header("Firebase")]
+    public DependencyStatus dependencyStatus;
+    public FirebaseAuth auth;
     public FirebaseUser User;
-    private DependencyStatus dependencyStatus;
-    private FirebaseAuth auth;
 
-    public bool UIEnabled { get; private set; }
+    //Login variables
+    [Header("Login")]
+    public TMP_InputField emailLoginField;
+    public TMP_InputField passwordLoginField;
+    public TMP_Text warningLoginText;
+    public TMP_Text confirmLoginText;
 
-    public virtual void Start() {
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
-        dependencyStatus = task.Result;
-        if (dependencyStatus == Firebase.DependencyStatus.Available) {
-        InitializeFirebase();
-        } else {
-            Debug.LogError(
-            "Could not resolve all Firebase dependencies: " + dependencyStatus);
+    //Register variables
+    [Header("Register")]
+    public TMP_InputField usernameRegisterField;
+    public TMP_InputField emailRegisterField;
+    public TMP_InputField passwordRegisterField;
+    public TMP_InputField passwordRegisterVerifyField;
+    public TMP_Text warningRegisterText;
+
+    void Awake()
+    {
+        //Check that all of the necessary dependencies for Firebase are present on the system
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        {
+            dependencyStatus = task.Result;
+            if (dependencyStatus == DependencyStatus.Available)
+            {
+                //If they are avalible Initialize Firebase
+                InitializeFirebase();
+            }
+            else
+            {
+                Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
             }
         });
     }
 
-    // Handle initialization of the necessary firebase modules:
-    protected void InitializeFirebase()
+    private void InitializeFirebase()
     {
-        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-        // auth.StateChanged += AuthStateChanged;
-        // auth.IdTokenChanged += IdTokenChanged;
-        DebugLog("Setting up Firebase Auth");
-    }
-    public Task SigninAnonymouslyAsync() {
-        DebugLog("Attempting to sign anonymously...");
-        return auth.SignInAnonymouslyAsync().ContinueWith(HandleSignInWithUser);
-    }
-    void HandleSignInWithUser(Task<Firebase.Auth.FirebaseUser> task) {
-        EnableUI();
-        DebugLog(String.Format("{0} signed in", task.Result.DisplayName));
+        Debug.Log("Setting up Firebase Auth");
+        //Set the authentication instance object
+        auth = FirebaseAuth.DefaultInstance;
     }
 
-    public void DebugLog(string s)
+    //Function for the login button
+    public void LoginButton()
     {
-        Debug.Log(s);
+        //Call the login coroutine passing the email and password
+        StartCoroutine(Login(emailLoginField.text, passwordLoginField.text));
     }
-    public void TestMe()
+    //Function for the register button
+    public void RegisterButton()
     {
-        Debug.Log("TestMe");
-    }
-    void DisableUI() {
-        UIEnabled = false;
-    }
-
-    void EnableUI() {
-        UIEnabled = true;
+        //Call the register coroutine passing the email, password, and username
+        StartCoroutine(Register(emailRegisterField.text, passwordRegisterField.text, usernameRegisterField.text));
     }
 
     private IEnumerator Login(string _email, string _password)
@@ -95,8 +98,7 @@ public class AuthManager : MonoBehaviour
                     message = "Account does not exist";
                     break;
             }
-            Debug.LogError(message);
-            // warningLoginText.text = message;
+            warningLoginText.text = message;
         }
         else
         {
@@ -104,7 +106,8 @@ public class AuthManager : MonoBehaviour
             //Now get the result
             User = LoginTask.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})", User.DisplayName, User.Email);
-            // confirmLoginText.text = "Logged In";
+            warningLoginText.text = "";
+            confirmLoginText.text = "Logged In";
         }
     }
 
@@ -113,13 +116,13 @@ public class AuthManager : MonoBehaviour
         if (_username == "")
         {
             //If the username field is blank show a warning
-            Debug.Log("Missing Username");
+            warningRegisterText.text = "Missing Username";
         }
-        // else if(passwordRegisterField.text != passwordRegisterVerifyField.text)
-        // {
-        //     //If the password does not match show a warning
-        //     warningRegisterText.text = "Password Does Not Match!";
-        // }
+        else if(passwordRegisterField.text != passwordRegisterVerifyField.text)
+        {
+            //If the password does not match show a warning
+            warningRegisterText.text = "Password Does Not Match!";
+        }
         else
         {
             //Call the Firebase auth signin function passing the email and password
@@ -150,7 +153,7 @@ public class AuthManager : MonoBehaviour
                         message = "Email Already In Use";
                         break;
                 }
-                Debug.LogError(message);
+                warningRegisterText.text = message;
             }
             else
             {
@@ -174,14 +177,14 @@ public class AuthManager : MonoBehaviour
                         Debug.LogWarning(message: $"Failed to register task with {ProfileTask.Exception}");
                         FirebaseException firebaseEx = ProfileTask.Exception.GetBaseException() as FirebaseException;
                         AuthError errorCode = (AuthError)firebaseEx.ErrorCode;
-                        Debug.LogError("Username Set Failed!");
+                        warningRegisterText.text = "Username Set Failed!";
                     }
                     else
                     {
                         //Username is now set
                         //Now return to login screen
-                        // UIManager.instance.LoginScreen();
-                        // warningRegisterText.text = "";
+                        //UIManager.instance.LoginScreen();
+                        warningRegisterText.text = "";
                     }
                 }
             }
