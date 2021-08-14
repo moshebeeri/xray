@@ -1,18 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Collections.Specialized;
 
-public class Tour : MonoBehaviour
+[Serializable]
+public class Tour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public String TourId { get; set; }
+    public String CountryId { get; set; }
+    public String CityId { get; set; }
+    public String Id { get; set; }
+    public String Name { get; set; }
+    public OrderedDictionary Locations { get; set; } = new OrderedDictionary();
 }

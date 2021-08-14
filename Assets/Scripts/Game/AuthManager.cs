@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Firebase;
 using Firebase.Auth;
 using TMPro;
+using Firebase.Firestore;
+using Firebase.Extensions;
+using System.Collections.Generic;
 
 public class AuthManager : MonoBehaviour
 {
@@ -11,6 +15,9 @@ public class AuthManager : MonoBehaviour
     public DependencyStatus dependencyStatus;
     public FirebaseAuth auth;
     public FirebaseUser User;
+
+    [Header("Firestore")]
+    FirebaseFirestore db;
 
     //Login variables
     [Header("Login")]
@@ -26,6 +33,9 @@ public class AuthManager : MonoBehaviour
     public TMP_InputField passwordRegisterField;
     public TMP_InputField passwordRegisterVerifyField;
     public TMP_Text warningRegisterText;
+
+    [Header("Debug")]
+    public TMP_Text debugText;
 
     void Awake()
     {
@@ -50,6 +60,9 @@ public class AuthManager : MonoBehaviour
         Debug.Log("Setting up Firebase Auth");
         //Set the authentication instance object
         auth = FirebaseAuth.DefaultInstance;
+
+        Debug.Log("Setting up Firestore");
+        db = FirebaseFirestore.DefaultInstance;
     }
 
     //Function for the login button
@@ -108,7 +121,51 @@ public class AuthManager : MonoBehaviour
             Debug.LogFormat("User signed in successfully: {0} ({1})", User.DisplayName, User.Email);
             warningLoginText.text = "";
             confirmLoginText.text = "Logged In";
+            PlayerPrefs.SetString("UserId", User.UserId);
+            debugText.text = PlayerPrefs.GetString("UserId");
+            TestFirestore();
         }
+    }
+
+    private void TestFirestore()
+    {
+        // Write data
+        DocumentReference docRef = db.Collection("tours").Document("Jerusalem");
+        Dictionary<string, object> data = new Dictionary<string, object>
+        {
+            { "name", "Jerusalem" },
+            { "lat", 1.1 },
+            { "long", 2.2 },
+        };
+        docRef.SetAsync(data).ContinueWithOnMainThread(task => {
+            Debug.Log("Added data to the alovelace document in the users collection.");
+            ReadData();
+        });
+    }
+
+    private void ReadData()
+    {
+        // Read data
+        CollectionReference usersRef = db.Collection("tours");
+        usersRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+            {
+                QuerySnapshot snapshot = task.Result;
+                foreach (DocumentSnapshot document in snapshot.Documents)
+                {
+                Debug.Log(String.Format("Tour: {0}", document.Id));
+                Dictionary<string, object> documentDictionary = document.ToDictionary();
+                Debug.Log(String.Format("Name: {0}", documentDictionary["name"]));
+                if (documentDictionary.ContainsKey("Desc"))
+                {
+                    Debug.Log(String.Format("Desc: {0}", documentDictionary["desc"]));
+                }
+
+                Debug.Log(String.Format("Lat: {0}", documentDictionary["lat"]));
+                Debug.Log(String.Format("Long: {0}", documentDictionary["long"]));
+                }
+
+                Debug.Log("Read all data from the tours collection.");
+            });
     }
 
     private IEnumerator Register(string _email, string _password, string _username)

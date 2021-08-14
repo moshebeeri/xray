@@ -1,18 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Location : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+[Serializable]
+public class Location
+{
+    public String ID { get; set; }
+    public String Name { get; set; }
+    public String Info { get; set; }
+    public float Lat { get; set; }
+    public float Long { get; set; }
+    public String videoURL { get; set; }
 }
