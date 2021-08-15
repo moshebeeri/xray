@@ -37,6 +37,27 @@ public class AuthManager : MonoBehaviour
     [Header("Debug")]
     public TMP_Text debugText;
 
+    // void Start()
+    // {
+    //     Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+    //         if (task.IsFaulted) {
+    //             Debug.Log("CheckAndFixDependenciesAsync() FAILED: " + task.Exception);
+    //             return;
+    //         }
+
+    //         db = FirebaseFirestore.DefaultInstance;
+
+    //         DocumentReference docRef = db.Collection("users_v2").Document("1234");
+    //         Dictionary<string, object> userData = new Dictionary<string, object> {
+    //             {"name", "denver"}
+    //         };
+
+    //         docRef.SetAsync(userData).ContinueWithOnMainThread(task2 => {
+    //         });
+    //     });
+    // }
+
+
     void Awake()
     {
         //Check that all of the necessary dependencies for Firebase are present on the system
@@ -47,6 +68,7 @@ public class AuthManager : MonoBehaviour
             {
                 //If they are avalible Initialize Firebase
                 InitializeFirebase();
+                debugText.text = "Initialized 3";
             }
             else
             {
@@ -57,12 +79,10 @@ public class AuthManager : MonoBehaviour
 
     private void InitializeFirebase()
     {
-        Debug.Log("Setting up Firebase Auth");
-        //Set the authentication instance object
+        //Debug.Log("Setting up Firebase Auth");
         auth = FirebaseAuth.DefaultInstance;
-
-        Debug.Log("Setting up Firestore");
         db = FirebaseFirestore.DefaultInstance;
+
     }
 
     //Function for the login button
@@ -130,15 +150,15 @@ public class AuthManager : MonoBehaviour
     private void TestFirestore()
     {
         // Write data
-        DocumentReference docRef = db.Collection("tours").Document("Jerusalem");
+        DocumentReference docRef = db.Collection("tours").Document("Manhattan");
         Dictionary<string, object> data = new Dictionary<string, object>
         {
-            { "name", "Jerusalem" },
+            { "name", "Manhattan" },
             { "lat", 1.1 },
             { "long", 2.2 },
         };
         docRef.SetAsync(data).ContinueWithOnMainThread(task => {
-            Debug.Log("Added data to the alovelace document in the users collection.");
+            Debug.Log("Added data to document in tours collection.");
             ReadData();
         });
     }
