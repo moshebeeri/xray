@@ -200,11 +200,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2014352075445445962, guid: ffff97b1d1a2d4d2083062e9ca0c5a7c, type: 3}
       propertyPath: LatLng._Lat
-      value: 48.8585253510041
+      value: 32.0796428433181
       objectReference: {fileID: 0}
     - target: {fileID: 2014352075445445962, guid: ffff97b1d1a2d4d2083062e9ca0c5a7c, type: 3}
       propertyPath: LatLng._Lng
-      value: 2.294481306769285
+      value: 34.76705827899559
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffff97b1d1a2d4d2083062e9ca0c5a7c, type: 3}

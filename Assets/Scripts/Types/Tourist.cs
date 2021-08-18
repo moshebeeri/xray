@@ -7,7 +7,15 @@ using System.Collections.Specialized;
 [Serializable]
 public class Tourist
 {
+    public Tourist( String UserId ,
+                    String CurrentTourId,
+                    String CurrentLocationId)
+    {
+        this.UserId = UserId;
+        this.CurrentTourId = CurrentTourId;
+        this.CurrentLocationId = CurrentLocationId;
+    }
     public String UserId { get; set; }
-    public String CurrentTour { get; set; }
-    public String CurrentLocation { get; set; }
+    public String CurrentTourId { get; set; }
+    public String CurrentLocationId { get; set; }
 }
