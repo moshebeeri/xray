@@ -1,3 +1,4 @@
+using System;
 using System.Net.Mime;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,6 +35,13 @@ public class Loader : MonoBehaviour
 
     public static void LoadMapScene()
     {
+        PlayerPrefs.SetFloat("Lat", 48.85885000297237f);
+        PlayerPrefs.SetFloat("Lng", 2.2943566789180916f);
         SceneManager.LoadScene(2);
+    }
+
+    public static void LoadToursSelectScene()
+    {
+        SceneManager.LoadScene("TourSelectScene");
     }
 }

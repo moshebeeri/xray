@@ -4,10 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using TMPro;
 
 public class StateManager : MonoBehaviour
 {
     FirebaseFirestore db;
+    List<Dictionary<string, object>> tours = new List<Dictionary<string, object>> ();
+
+    [Header("Debug")]
+    public TMP_Text debugText;
 
     // Start is called before the first frame update
     void Start()
@@ -70,24 +75,55 @@ public class StateManager : MonoBehaviour
     private List<Dictionary<string, object>> Extract(QuerySnapshot snapshot)
     {
         List<Dictionary<string, object>> docs = new List<Dictionary<string, object>> ();
+        int i = 0;
         foreach (DocumentSnapshot document in snapshot.Documents)
         {
+            debugText.text = "try to read";
+            Debug.Log(String.Format("Snapshot {0}", i++));
+
             Dictionary<string, object> tour = document.ToDictionary();
             docs.Add(tour);
         }
         return docs;
     }
 
+    public void GetTours()
+    {
+        List<Dictionary<string, object>>  all = GetAllTours();
+        debugText.text = "Number of tours is " + all.Count;
+        // debugText.text = "try to read";
+        // ReadData();
+    }
+
+    private void ReadData()
+    {
+        // Read data
+        CollectionReference usersRef = db.Collection("tours");
+        usersRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+            {
+                int i = 0;
+                QuerySnapshot snapshot = task.Result;
+                foreach (DocumentSnapshot document in snapshot.Documents)
+                {
+                    Debug.Log(String.Format("Snapshot {0}", i++));
+                    Dictionary<string, object> documentDictionary = document.ToDictionary();
+                    Debug.Log(String.Format("Name: {0}", documentDictionary["Name"]));
+                }
+
+                Debug.Log("Read all data from the tours collection.");
+            });
+    }
+
+
     public List<Dictionary<string, object>>  GetAllTours()
     {
-        List<Dictionary<string, object>> tours = new List<Dictionary<string, object>> ();
         // Read data
         CollectionReference toursRef = db.Collection("tours");
         toursRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             tours = Extract(task.Result);
         });
-        return tours;
+        return null;
     }
 
     public List<Dictionary<string, object>> GetCitiesByCountry(String Country)
