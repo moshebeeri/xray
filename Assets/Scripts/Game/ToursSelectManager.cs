@@ -1,7 +1,9 @@
-using System;
+using System.Diagnostics;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 using TMPro;
+using System;
 
 public class ToursSelectManager : MonoBehaviour
 {
@@ -21,10 +23,13 @@ public class ToursSelectManager : MonoBehaviour
                 // Works with ToursList as scrollView
                 //GameObject preview = Instantiate(tourPreviewPrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
                 GameObject preview = Instantiate(tourPreviewPrefab) as GameObject;
+                //buttonScript.onClick.AddListener(() => {panel.RecieveButtonInput(index);});
+                string buttonID = String.Format("Preview {0} Clicked", i);
+                preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked(buttonID));
                 TMP_Text title = preview.transform.Find("Title").GetComponent<TMP_Text>();
                 if(title != null)
                 {
-                    title.text = String.Format("Hello {0} Paris", i);
+                    title.text = String.Format("Preview {0}", i);
                 }
                 else
                 {
@@ -33,19 +38,16 @@ public class ToursSelectManager : MonoBehaviour
                 preview.transform.SetParent(scrollView.transform, false);
 
             }
-
-
-            // float size = preview.GetComponent<Renderer> ().bounds.size.y;
-            // Vector3 rescale = preview.transform.localScale;
-            // rescale.y = 150 * rescale.y / size;
-            // rescale.x = 300 * rescale.x / size;
-            // preview.transform.localScale = rescale;
-
         }
         else
         {
             Debug.Log("No tourPreviewPrefab!");
         }
+    }
+
+    public void OnPreviewClicked(string name)
+    {
+        Debug.Log(name);
     }
 
     // Update is called once per frame
@@ -54,17 +56,17 @@ public class ToursSelectManager : MonoBehaviour
 
     }
 
-    void FixedUpdate() {
-        // GameObject preview = Instantiate(tourPreviewPrefab, new Vector3(0,0,0), Quaternion.identity);
-        // preview.GetComponent<Rigidbody>().velocity = getRandomForce();
-    }
+    // void FixedUpdate() {
+    //     GameObject preview = Instantiate(tourPreviewPrefab, new Vector3(0,0,0), Quaternion.identity);
+    //     preview.GetComponent<Rigidbody>().velocity = getRandomForce();
+    // }
 
-    private Vector3 getRandomForce()
-    {
-        float x =  Random.Range(-0.1f, 0.1f);
-        float y =  Random.Range(0.2f, 1f);
-        float z =  Random.Range(-0.1f, 0.1f);
+    // private Vector3 getRandomForce()
+    // {
+    //     float x =  Random.Range(-0.1f, 0.1f);
+    //     float y =  Random.Range(0.2f, 1f);
+    //     float z =  Random.Range(-0.1f, 0.1f);
 
-        return new Vector3(x, y, z);
-    }
+    //     return new Vector3(x, y, z);
+    // }
 }
