@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using TMPro;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class ToursSelectManager : MonoBehaviour
 {
@@ -61,9 +63,16 @@ public class ToursSelectManager : MonoBehaviour
 
     }
 
-    public void  PopulateTours()
+    public async void PopulateTours()
     {
         Debug.Log(stateManager.Greet());
+        List<Dictionary<string, object>> tours = await stateManager.FetchTours();
+        Debug.Log(String.Format("Number of tours {0}", tours.Count));
+        foreach (Dictionary<string, object> tour in tours)
+        {
+            Debug.Log(String.Format("Name: {0}", tour["Name"]));
+        }
+
     }
 
     // void FixedUpdate() {
