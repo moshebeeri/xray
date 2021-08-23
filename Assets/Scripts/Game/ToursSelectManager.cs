@@ -13,15 +13,20 @@ public class ToursSelectManager : MonoBehaviour
     [Header("Debug")]
     public TMP_Text debugText;
 
+    public GameObject stateManagerContainer;
+    StateManager stateManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        if(tourPreviewPrefab)
+        stateManager = stateManagerContainer.GetComponent<StateManager>();
+
+        if(tourPreviewPrefab && scrollView)
         {
             for (int i = 0; i < 5; i++)
             {
                 // Works with ToursList as scrollView
-                //GameObject preview = Instantiate(tourPreviewPrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+                // GameObject preview = Instantiate(tourPreviewPrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
                 GameObject preview = Instantiate(tourPreviewPrefab) as GameObject;
                 //buttonScript.onClick.AddListener(() => {panel.RecieveButtonInput(index);});
                 string buttonID = String.Format("Preview {0} Clicked", i);
@@ -41,7 +46,7 @@ public class ToursSelectManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No tourPreviewPrefab!");
+            Debug.Log("tourPreviewPrefab and scrollView should be populated");
         }
     }
 
@@ -54,6 +59,11 @@ public class ToursSelectManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void  PopulateTours()
+    {
+        Debug.Log(stateManager.Greet());
     }
 
     // void FixedUpdate() {

@@ -161,5 +161,11 @@ public class StateManager : MonoBehaviour
         });
         return tours;
     }
+
+    public string Greet()
+    {
+        return "Hi You!!!";
+    }
+
 }
 
