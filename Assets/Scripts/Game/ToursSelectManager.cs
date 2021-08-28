@@ -19,24 +19,33 @@ public class ToursSelectManager : MonoBehaviour
     StateManager stateManager;
 
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
+
+        Debug.Log(String.Format("=======ToursSelectManager Started"));
+
         stateManager = stateManagerContainer.GetComponent<StateManager>();
 
         if(tourPreviewPrefab && scrollView)
         {
-            for (int i = 0; i < 5; i++)
+            List<Dictionary<string, object>> tours = await stateManager.FetchTours();
+            Debug.Log(String.Format("=======Number of tours {0}", tours.Count));
+            foreach (Dictionary<string, object> tour in tours)
             {
-                // Works with ToursList as scrollView
-                // GameObject preview = Instantiate(tourPreviewPrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+                if(!tour.ContainsKey("Name"))
+                {
+                    Debug.Log(String.Format("Name not found in dictionary"));
+                    continue;
+                }
+                Debug.Log(String.Format("Name: {0}", tour["Name"]));
                 GameObject preview = Instantiate(tourPreviewPrefab) as GameObject;
                 //buttonScript.onClick.AddListener(() => {panel.RecieveButtonInput(index);});
-                string buttonID = String.Format("Preview {0} Clicked", i);
+                string buttonID = String.Format("Preview {0} Clicked", tour["Name"]);
                 preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked(buttonID));
                 TMP_Text title = preview.transform.Find("Title").GetComponent<TMP_Text>();
                 if(title != null)
                 {
-                    title.text = String.Format("Preview {0}", i);
+                    title.text = String.Format("Tour {0}", tour["Name"]);
                 }
                 else
                 {
@@ -65,7 +74,6 @@ public class ToursSelectManager : MonoBehaviour
 
     public async void PopulateTours()
     {
-        Debug.Log(stateManager.Greet());
         List<Dictionary<string, object>> tours = await stateManager.FetchTours();
         Debug.Log(String.Format("Number of tours {0}", tours.Count));
         foreach (Dictionary<string, object> tour in tours)

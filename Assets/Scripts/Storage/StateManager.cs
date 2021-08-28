@@ -171,52 +171,12 @@ public class StateManager : MonoBehaviour
     public async Task<List<Dictionary<string, object>>>  FetchTours()
     {
         // Read data
+        db = FirebaseFirestore.DefaultInstance;
         CollectionReference toursRef = db.Collection("tours");
         QuerySnapshot snapshot = await toursRef.GetSnapshotAsync();
         List<Dictionary<string, object>> tours = Extract(snapshot);
         return tours;
     }
-
-    // private IEnumerator LoadScoreboardData()
-    // {
-    //     //Get all the users data ordered by kills amount
-    //     var DBTask = DBreference.Child("users").OrderByChild("kills").GetValueAsync();
-
-    //     yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-
-    //     if (DBTask.Exception != null)
-    //     {
-    //         Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-    //     }
-    //     else
-    //     {
-    //         //Data has been retrieved
-    //         DataSnapshot snapshot = DBTask.Result;
-
-    //         //Destroy any existing scoreboard elements
-    //         foreach (Transform child in scoreboardContent.transform)
-    //         {
-    //             Destroy(child.gameObject);
-    //         }
-
-    //         //Loop through every users UID
-    //         foreach (DataSnapshot childSnapshot in snapshot.Children.Reverse<DataSnapshot>())
-    //         {
-    //             string username = childSnapshot.Child("username").Value.ToString();
-    //             int kills = int.Parse(childSnapshot.Child("kills").Value.ToString());
-    //             int deaths = int.Parse(childSnapshot.Child("deaths").Value.ToString());
-    //             int xp = int.Parse(childSnapshot.Child("xp").Value.ToString());
-
-    //             //Instantiate new scoreboard elements
-    //             GameObject scoreboardElement = Instantiate(scoreElement, scoreboardContent);
-    //             scoreboardElement.GetComponent<ScoreElement>().NewScoreElement(username, kills, deaths, xp);
-    //         }
-
-    //         //Go to scoareboard screen
-    //         UIManager.instance.ScoreboardScreen();
-    //     }
-    // }
-
 
 }
 

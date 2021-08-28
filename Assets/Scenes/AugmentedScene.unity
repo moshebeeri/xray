@@ -1310,7 +1310,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596866919}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 16d6809e7b240437097f6b5f16716481, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 8bea9af17f0a9401a8335511af920103, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -1320,14 +1320,14 @@ VideoPlayer:
   m_TargetMaterialProperty: _MainTex
   m_RenderMode: 2
   m_AspectRatio: 2
-  m_DataSource: 0
+  m_DataSource: 1
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
   m_TargetAudioSources:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 1
-  m_Url: 
+  m_Url: https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FPromenade1.mp4?alt=media&token=114b803f-e4d2-4060-a784-8915ba839df2
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
