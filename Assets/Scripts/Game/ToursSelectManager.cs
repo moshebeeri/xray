@@ -22,14 +22,12 @@ public class ToursSelectManager : MonoBehaviour
     async void Start()
     {
 
-        Debug.Log(String.Format("=======ToursSelectManager Started"));
 
         stateManager = stateManagerContainer.GetComponent<StateManager>();
 
         if(tourPreviewPrefab && scrollView)
         {
             List<Dictionary<string, object>> tours = await stateManager.FetchTours();
-            Debug.Log(String.Format("=======Number of tours {0}", tours.Count));
             foreach (Dictionary<string, object> tour in tours)
             {
                 if(!tour.ContainsKey("Name"))
@@ -39,17 +37,19 @@ public class ToursSelectManager : MonoBehaviour
                 }
                 Debug.Log(String.Format("Name: {0}", tour["Name"]));
                 GameObject preview = Instantiate(tourPreviewPrefab) as GameObject;
-                //buttonScript.onClick.AddListener(() => {panel.RecieveButtonInput(index);});
+                preview.SetActive(true);
+                preview.GetComponent<TourPreview>().FromDictionary(tour);
+
                 string buttonID = String.Format("Preview {0} Clicked", tour["Name"]);
                 preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked(buttonID));
                 TMP_Text title = preview.transform.Find("Title").GetComponent<TMP_Text>();
                 if(title != null)
                 {
-                    title.text = String.Format("Tour {0}", tour["Name"]);
+                    title.text = (string)tour["Name"];
                 }
                 else
                 {
-                    debugText.text = "No Title";
+                    title.text = "No Title";
                 }
                 preview.transform.SetParent(scrollView.transform, false);
 

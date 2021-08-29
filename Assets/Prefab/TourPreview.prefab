@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 8719975273230561173}
   - component: {fileID: 6351069331402008899}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Thumbnaile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ae4143c54c02e40d1a4fd8647c96ed23, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 93779b495b5904bce970b26d09f43c78, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -489,6 +489,7 @@ GameObject:
   - component: {fileID: 7550609125209745409}
   - component: {fileID: 7671104152387460663}
   - component: {fileID: 8596031237812433173}
+  - component: {fileID: 969167491581411776}
   m_Layer: 5
   m_Name: TourPreview
   m_TagString: Untagged
@@ -601,3 +602,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &969167491581411776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7127873208489781438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9fdaaedbf61c427bb7c368370d6097d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 781646160143607105}
+  thumb: {fileID: 6351069331402008899}
+  country: {fileID: 2532299615126461925}
+  city: {fileID: 3430712351570329061}
