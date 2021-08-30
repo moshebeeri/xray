@@ -25,19 +25,19 @@ public class Loader : MonoBehaviour
 
     public static void LoadMainScene()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("MainScene");
     }
 
     public static void LoadAugmentedScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("AugmentedScene");
     }
 
     public static void LoadMapScene()
     {
         PlayerPrefs.SetFloat("Lat", 48.85885000297237f);
         PlayerPrefs.SetFloat("Lng", 2.2943566789180916f);
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene("LocationMapScene");
     }
 
     public static void LoadToursSelectScene()

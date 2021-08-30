@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Firestore;
 using Firebase.Extensions;
-using TMPro;
 using System.Threading.Tasks;
 
 public class StateManager : MonoBehaviour
@@ -12,8 +10,8 @@ public class StateManager : MonoBehaviour
     FirebaseFirestore db;
     List<Dictionary<string, object>> tours = new List<Dictionary<string, object>> ();
 
-    [Header("Debug")]
-    public TMP_Text debugText;
+    // [Header("Debug")]
+    // public TMP_Text debugText;
 
     // Start is called before the first frame update
     void Start()
@@ -73,16 +71,16 @@ public class StateManager : MonoBehaviour
         });
     }
 
+
     private List<Dictionary<string, object>> Extract(QuerySnapshot snapshot)
     {
         List<Dictionary<string, object>> docs = new List<Dictionary<string, object>> ();
         int i = 0;
         foreach (DocumentSnapshot document in snapshot.Documents)
         {
-            debugText.text = "try to read";
             Debug.Log(String.Format("Snapshot {0}", i++));
-
             Dictionary<string, object> tour = document.ToDictionary();
+            tour["Id"] = document.Id;
             docs.Add(tour);
         }
         return docs;
@@ -91,7 +89,7 @@ public class StateManager : MonoBehaviour
     public void GetTours()
     {
         List<Dictionary<string, object>>  all = GetAllTours();
-        debugText.text = "Number of tours is " + all.Count;
+        Debug.Log("Number of tours is " + all.Count);
         // debugText.text = "try to read";
         // ReadData();
     }
@@ -101,20 +99,19 @@ public class StateManager : MonoBehaviour
         // Read data
         CollectionReference usersRef = db.Collection("tours");
         usersRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            int i = 0;
+            QuerySnapshot snapshot = task.Result;
+            foreach (DocumentSnapshot document in snapshot.Documents)
             {
-                int i = 0;
-                QuerySnapshot snapshot = task.Result;
-                foreach (DocumentSnapshot document in snapshot.Documents)
-                {
-                    Debug.Log(String.Format("Snapshot {0}", i++));
-                    Dictionary<string, object> documentDictionary = document.ToDictionary();
-                    Debug.Log(String.Format("Name: {0}", documentDictionary["Name"]));
-                }
+                Debug.Log(String.Format("Snapshot {0}", i++));
+                Dictionary<string, object> documentDictionary = document.ToDictionary();
+                Debug.Log(String.Format("Name: {0}", documentDictionary["Name"]));
+            }
 
-                Debug.Log("Read all data from the tours collection.");
-            });
+            Debug.Log("Read all data from the tours collection.");
+        });
     }
-
 
     public List<Dictionary<string, object>>  GetAllTours()
     {
@@ -176,6 +173,24 @@ public class StateManager : MonoBehaviour
         QuerySnapshot snapshot = await toursRef.GetSnapshotAsync();
         List<Dictionary<string, object>> tours = Extract(snapshot);
         return tours;
+    }
+
+    public async Task<Dictionary<string, object>>  GetLocationById(string locationId)
+    {
+        db = FirebaseFirestore.DefaultInstance;
+        DocumentReference locationRef = db.Collection("locations").Document(locationId);
+        DocumentSnapshot snapshot = await locationRef.GetSnapshotAsync();
+        Dictionary<string, object> location = snapshot.ToDictionary();
+        location["Id"] = locationId;
+        return location;
+    }
+    public async Task<List<Dictionary<string, object>>> FetchTourLocations(string tourId)
+    {
+        DocumentReference toursRef = db.Collection("tours").Document(tourId);
+        Query locationsRef = toursRef.Collection("locations").OrderBy("Order");
+        QuerySnapshot snapshot = await locationsRef.GetSnapshotAsync();
+        List<Dictionary<string, object>> locations = Extract(snapshot);
+        return locations;
     }
 
 }

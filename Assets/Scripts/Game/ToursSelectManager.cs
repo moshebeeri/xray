@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class ToursSelectManager : MonoBehaviour
 {
@@ -40,8 +41,7 @@ public class ToursSelectManager : MonoBehaviour
                 preview.SetActive(true);
                 preview.GetComponent<TourPreview>().FromDictionary(tour);
 
-                string buttonID = String.Format("Preview {0} Clicked", tour["Name"]);
-                preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked(buttonID));
+                preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked((string)tour["Id"]));
                 TMP_Text title = preview.transform.Find("Title").GetComponent<TMP_Text>();
                 if(title != null)
                 {
@@ -52,7 +52,6 @@ public class ToursSelectManager : MonoBehaviour
                     title.text = "No Title";
                 }
                 preview.transform.SetParent(scrollView.transform, false);
-
             }
         }
         else
@@ -61,9 +60,18 @@ public class ToursSelectManager : MonoBehaviour
         }
     }
 
-    public void OnPreviewClicked(string name)
+    public void OnPreviewClicked(string tourId)
     {
-        Debug.Log(name);
+        Debug.Log(tourId);
+        ToursInfo.CurrentTourId = tourId;
+        Task task = PrepareAndLaunchTourAsync(tourId);
+    }
+    async Task PrepareAndLaunchTourAsync(string tourId)
+    {
+        List<Dictionary<string, object>> locations = await stateManager.FetchTourLocations(tourId);
+        ToursInfo.CurrentTourLocations = locations;
+        ToursInfo.CurrentLocationIndex = 0;
+        Loader.LoadAugmentedScene();
     }
 
     // Update is called once per frame

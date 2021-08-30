@@ -25,7 +25,8 @@ public class LoadTextureFromURL : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(MediaUrl);
         yield return request.SendWebRequest();
-        if (request.isNetworkError || request.isHttpError)
+        if( request.result == UnityWebRequest.Result.ConnectionError ||
+            request.result == UnityWebRequest.Result.ProtocolError)
             Debug.Log(request.error);
         else
             this.gameObject.GetComponent<Renderer>().material.mainTexture = ((DownloadHandlerTexture)request.downloadHandler).texture;
