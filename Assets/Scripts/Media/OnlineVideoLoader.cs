@@ -44,9 +44,13 @@ public class OnlineVideoLoader : MonoBehaviour
         else {
             // Or retrieve results as binary data
             //byte[] results = www.downloadHandler.data;
-            File.WriteAllBytes(Application.persistentDataPath+"/"+filename, www.downloadHandler.data);
+            File.WriteAllBytes(file(filename), www.downloadHandler.data);
             Debug.Log ("File Saved!");
         }
+    }
+    private string file(string name)
+    {
+        return Application.persistentDataPath + "/" + name;
     }
 
     private IEnumerator DownloadNext(string url)
@@ -62,10 +66,6 @@ public class OnlineVideoLoader : MonoBehaviour
         yield return DownloadVideo(url, previousVideo);
     }
 
-    private string file(string name)
-    {
-        return Application.persistentDataPath + "/" + name;
-    }
 
     public IEnumerator StartTour(List<Dictionary<string, object>> locations)
     {

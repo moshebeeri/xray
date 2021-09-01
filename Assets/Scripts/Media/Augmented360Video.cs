@@ -28,7 +28,9 @@ public class Augmented360Video : MonoBehaviour
     {
         Dictionary<string, object> location = ToursInfo.CurrentTourLocations[ToursInfo.CurrentLocationIndex];
         Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
-        if(location.ContainsKey("Video360"))
-            videoManager.url((string)locationData["Video360"]);
+        if(!locationData.ContainsKey("Video360"))
+            // videoManager.url((string)locationData["Video360"]);
+            return;
+        StartCoroutine(videoManager.DownloadVideo((string)locationData["Video360"], "temp.mp4"));
     }
 }

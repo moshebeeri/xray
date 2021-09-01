@@ -66,9 +66,13 @@ public class AuthManager : MonoBehaviour
             dependencyStatus = task.Result;
             if (dependencyStatus == DependencyStatus.Available)
             {
-                //If they are avalible Initialize Firebase
+                //If they are availble Initialize Firebase
                 InitializeFirebase();
-                debugText.text = "Initialized 3";
+                if(auth.CurrentUser != null)
+                {
+                    Debug.Log(String.Format("auth.CurrentUser.UserId {0}", auth.CurrentUser.UserId));
+                    StartCoroutine(LoadToursSelectScene(auth.CurrentUser.UserId));
+                }
             }
             else
             {
@@ -77,12 +81,18 @@ public class AuthManager : MonoBehaviour
         });
     }
 
+    private IEnumerator LoadToursSelectScene(string UserId)
+    {
+        // PlayerPrefs.SetString("UserId", "auth.CurrentUser.UserId");
+        Loader.LoadToursSelectScene();
+        return null;
+    }
+
     private void InitializeFirebase()
     {
         //Debug.Log("Setting up Firebase Auth");
         auth = FirebaseAuth.DefaultInstance;
         db = FirebaseFirestore.DefaultInstance;
-
     }
 
     //Function for the login button
@@ -143,49 +153,7 @@ public class AuthManager : MonoBehaviour
             confirmLoginText.text = "Logged In";
             PlayerPrefs.SetString("UserId", User.UserId);
             debugText.text = PlayerPrefs.GetString("UserId");
-            TestFirestore();
         }
-    }
-
-    private void TestFirestore()
-    {
-        // Write data
-        DocumentReference docRef = db.Collection("tours").Document("Manhattan");
-        Dictionary<string, object> data = new Dictionary<string, object>
-        {
-            { "name", "Manhattan" },
-            { "lat", 1.1 },
-            { "long", 2.2 },
-        };
-        docRef.SetAsync(data).ContinueWithOnMainThread(task => {
-            Debug.Log("Added data to document in tours collection.");
-            ReadData();
-        });
-    }
-
-    private void ReadData()
-    {
-        // Read data
-        CollectionReference usersRef = db.Collection("tours");
-        usersRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-            {
-                QuerySnapshot snapshot = task.Result;
-                foreach (DocumentSnapshot document in snapshot.Documents)
-                {
-                Debug.Log(String.Format("Tour: {0}", document.Id));
-                Dictionary<string, object> documentDictionary = document.ToDictionary();
-                Debug.Log(String.Format("Name: {0}", documentDictionary["name"]));
-                if (documentDictionary.ContainsKey("Desc"))
-                {
-                    Debug.Log(String.Format("Desc: {0}", documentDictionary["desc"]));
-                }
-
-                Debug.Log(String.Format("Lat: {0}", documentDictionary["lat"]));
-                Debug.Log(String.Format("Long: {0}", documentDictionary["long"]));
-                }
-
-                Debug.Log("Read all data from the tours collection.");
-            });
     }
 
     private IEnumerator Register(string _email, string _password, string _username)
