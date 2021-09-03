@@ -11,6 +11,7 @@ public class VideoManager : MonoBehaviour
 {
     public List<VideoClip> videos = null;
     public VideoPlayer videoPlayer;
+    public GameObject loading;
 
     private bool isPaused = false;
     public bool IsPaused
@@ -88,6 +89,7 @@ public class VideoManager : MonoBehaviour
 
     private void PrepareCompleted(VideoPlayer source)
     {
+        loading.SetActive(false);
         Play();
     }
 
@@ -130,6 +132,7 @@ public class VideoManager : MonoBehaviour
     private void OnComplete(VideoPlayer videoPlayer)
     {
         IsReady = true;
+        loading.SetActive(false);
         videoPlayer.Play();
     }
     private void OnLoop(VideoPlayer videoPlayer)
