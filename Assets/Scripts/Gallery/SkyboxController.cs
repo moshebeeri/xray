@@ -1,13 +1,14 @@
 // https://stackoverflow.com/questions/45032579/editing-a-cubemap-skybox-from-remote-image
-
+// https://forum.unity.com/threads/how-to-set-a-skybox-from-an-image-url.420476/
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class SkyboxController : MonoBehaviour
 {
-    string url = "https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FGS__0016.JPG?alt=media&token=c0412b8b-a107-429f-9ddb-0f9bdd63c619";
-
-    int CubemapResolution = 1024;
+    string first_url = "https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FGS__0016.JPG?alt=media&token=c0412b8b-a107-429f-9ddb-0f9bdd63c619";
+    string next_url = "https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FGS__0023.JPG?alt=media&token=2c23e798-ddd6-4cdf-9492-5e7da180fea0";
+    int CubemapResolution = 2048;
 
     private Texture2D source;
 
@@ -54,51 +55,58 @@ public class SkyboxController : MonoBehaviour
         }
     };
 
-    void Update()
+    public void next()
     {
-            // start Coroutine to handle the WWW asynchronous process
-            StartCoroutine(setImage());
+        Debug.Log("new 360 image");
+        StartCoroutine(setImage(next_url));
     }
 
-    IEnumerator setImage()
+    void Start()
     {
-        WWW www = new WWW(url);
-        //Texture myGUITexture = Resources.Load("23") as Texture;
+        // start Coroutine to handle the WWW asynchronous process
+        StartCoroutine(setImage(first_url));
+    }
 
-        Debug.Log(www.bytesDownloaded);
-        Debug.Log(www.progress);
-        Debug.Log(www.texture);
+    IEnumerator setImage(string url)
+    {
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+        yield return request.SendWebRequest();
 
-        yield return www;
+        //Texture2D texture = ((DownloadHandlerTexture) request.downloadHandler).texture;
+        source = DownloadHandlerTexture.GetContent(request);
 
-        source = new Texture2D(www.texture.width, www.texture.height);
-        // we put the downloaded image into the new texture
-        www.LoadImageIntoTexture(source);
+        //request.LoadImageIntoTexture(source);
+
 
         // new cubemap
-        Cubemap c = new Cubemap(CubemapResolution, TextureFormat.RGBA32, false);
+        Cubemap cube = new Cubemap(CubemapResolution, TextureFormat.RGBA32, false);
 
         Color[] CubeMapColors;
 
         for (int i = 0; i < 6; i++)
         {
             CubeMapColors = CreateCubemapTexture(CubemapResolution, (CubemapFace)i);
-            c.SetPixels(CubeMapColors, (CubemapFace)i);
+            cube.SetPixels(CubeMapColors, (CubemapFace)i);
         }
         // we set the cubemap from the texture pixel by pixel
-        c.Apply();
+        cube.Apply();
 
-        //Destroy all unused textures
+        // Destroy all unused textures
         DestroyImmediate(source);
-        DestroyImmediate(www.texture);
         Texture2D[] texs = FindObjectsOfType<Texture2D>();
         for (int i = 0; i < texs.Length; i++)
         {
             DestroyImmediate(texs[i]);
         }
 
+        // TEST
+        // Material mat = new Material(RenderSettings.skybox);
+        // mat.SetTexture("_Tex", source);
+        // RenderSettings.skybox = mat;
+        // END TEXT
+
         // We change the Cubemap of the Skybox
-        RenderSettings.skybox.SetTexture("_Tex", c);
+        RenderSettings.skybox.SetTexture("_Tex", cube);
     }
 
     /// <summary>
@@ -136,7 +144,7 @@ public class SkyboxController : MonoBehaviour
         texture.Apply();
 
         Color[] colors = texture.GetPixels();
-        DestroyImmediate(texture);
+        //DestroyImmediate(texture);
 
         return colors;
     }
@@ -161,3 +169,4 @@ public class SkyboxController : MonoBehaviour
         return source.GetPixel(texelX, source.height - texelY - 1);
     }
 }
+
