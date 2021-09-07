@@ -1,3 +1,4 @@
+using System.Text;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,8 +23,6 @@ public class ToursSelectManager : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
-
-
         stateManager = stateManagerContainer.GetComponent<StateManager>();
 
         if(tourPreviewPrefab && scrollView)
@@ -40,7 +39,6 @@ public class ToursSelectManager : MonoBehaviour
                 GameObject preview = Instantiate(tourPreviewPrefab) as GameObject;
                 preview.SetActive(true);
                 preview.GetComponent<TourPreview>().FromDictionary(tour);
-
                 preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked((string)tour["Id"]));
                 TMP_Text title = preview.transform.Find("Title").GetComponent<TMP_Text>();
                 if(title != null)
@@ -62,22 +60,48 @@ public class ToursSelectManager : MonoBehaviour
 
     public void OnPreviewClicked(string tourId)
     {
-        Debug.Log(tourId);
         ToursInfo.CurrentTourId = tourId;
         Task task = PrepareAndLaunchTourAsync(tourId);
     }
     async Task PrepareAndLaunchTourAsync(string tourId)
     {
+        Debug.Log(String.Format("PrepareAndLaunchTourAsync: tourId {0}", tourId));
         List<Dictionary<string, object>> locations = await stateManager.FetchTourLocations(tourId);
         ToursInfo.CurrentTourLocations = locations;
         ToursInfo.CurrentLocationIndex = 0;
-        Loader.LoadAugmentedScene();
+        Dictionary<string, object> location = ToursInfo.Location();
+        Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
+        List<object> scenes = (List<object>)locationData["scenes"];
+        Debug.Log(String.Format("PrepareAndLaunchTourAsync {0} scenes in location {1}", scenes.Count, (string)location["Id"]));
+        if(scenes.Count > 0)
+        {
+            Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
+            Debug.Log((string)sceneData["type"]);
+            LoadNextScene(sceneData);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void LoadNextScene(Dictionary<string, object> scene)
     {
-
+        ToursInfo.CurrentScene = scene;
+        switch (scene["type"])
+        {
+            case "360Video":
+                Loader.LoadVideo360Scene();
+                break;
+            case "360Gallery":
+                Loader.LoadGalleryPanoramicScene();
+                break;
+            case "VRMap":
+                Loader.LoadMapScene();
+                break;
+            case "Video":
+                Debug.LogError("Video Scene is not yet implemented");
+                break;
+            default:
+                break;
+        }
+        return;
     }
 
     public async void PopulateTours()
@@ -88,7 +112,6 @@ public class ToursSelectManager : MonoBehaviour
         {
             Debug.Log(String.Format("Name: {0}", tour["Name"]));
         }
-
     }
 
     // void FixedUpdate() {

@@ -140,7 +140,7 @@ public class VideoManager : MonoBehaviour
         //Next();
     }
 
-    public IEnumerator DownloadVideo(string url, string filename)
+    public IEnumerator DownloadAndPlayVideo(string url, string filename)
     {
         UnityWebRequest www = new UnityWebRequest(url);
         www.downloadHandler = new DownloadHandlerBuffer();

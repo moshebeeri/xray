@@ -193,5 +193,12 @@ public class StateManager : MonoBehaviour
         return locations;
     }
 
+    public async Task<Dictionary<string, object>> FetchScene(object sceneRefObject)
+    {
+        DocumentReference sceneRef = (DocumentReference)sceneRefObject;
+        DocumentSnapshot snapshot = await sceneRef.GetSnapshotAsync();
+        Dictionary<string, object> scene = snapshot.ToDictionary();
+        return scene;
+    }
 }
 

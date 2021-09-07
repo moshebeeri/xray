@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,19 +19,16 @@ public class Augmented360Video : MonoBehaviour
         DownloadAndPlayVideo();
     }
 
-    // Update is called once per frame
-    void Update()
+    void DownloadAndPlayVideo()
     {
-
-    }
-
-    async void DownloadAndPlayVideo()
-    {
-        Dictionary<string, object> location = ToursInfo.CurrentTourLocations[ToursInfo.CurrentLocationIndex];
-        Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
-        if(!locationData.ContainsKey("Video360"))
+        // Dictionary<string, object> location = ToursInfo.CurrentTourLocations[ToursInfo.CurrentLocationIndex];
+        // Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
+        Dictionary<string, object> scene = ToursInfo.CurrentScene;
+        if(!scene.ContainsKey("url"))
             // videoManager.url((string)locationData["Video360"]);
             return;
-        StartCoroutine(videoManager.DownloadVideo((string)locationData["Video360"], "temp.mp4"));
+        string url = (string)scene["url"];
+        string name = String.Format("{0}.mp4", url.GetHashCode());
+        StartCoroutine(videoManager.DownloadAndPlayVideo((string)scene["url"], name));
     }
 }

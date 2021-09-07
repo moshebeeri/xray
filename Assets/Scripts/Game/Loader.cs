@@ -28,9 +28,9 @@ public class Loader : MonoBehaviour
         SceneManager.LoadScene("MainScene");
     }
 
-    public static void LoadAugmentedScene()
+    public static void LoadVideo360Scene()
     {
-        SceneManager.LoadScene("AugmentedScene");
+        SceneManager.LoadScene("Video360Scene");
     }
 
     public static void LoadMapScene()
@@ -43,5 +43,9 @@ public class Loader : MonoBehaviour
     public static void LoadToursSelectScene()
     {
         SceneManager.LoadScene("TourSelectScene");
+    }
+    public static void LoadGalleryPanoramicScene()
+    {
+        SceneManager.LoadScene("GalleryPanoramicScene");
     }
 }
