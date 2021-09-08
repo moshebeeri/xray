@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Augmented360Video : MonoBehaviour
+public class Video360Controller : MonoBehaviour
 {
     [Header("Scripts")]
     public GameObject stateManagerContainer;
@@ -11,6 +11,7 @@ public class Augmented360Video : MonoBehaviour
     StateManager stateManager;
     VideoManager videoManager;
 
+    // Start is called before the first frame update
     void Start()
     {
         stateManager = stateManagerContainer.GetComponent<StateManager>();
@@ -20,6 +21,8 @@ public class Augmented360Video : MonoBehaviour
 
     void DownloadAndPlayVideo()
     {
+        // Dictionary<string, object> location = ToursInfo.CurrentTourLocations[ToursInfo.CurrentLocationIndex];
+        // Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
         Dictionary<string, object> scene = ToursInfo.CurrentScene;
         if(!scene.ContainsKey("url"))
             return;

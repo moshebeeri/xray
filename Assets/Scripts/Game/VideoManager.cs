@@ -142,27 +142,25 @@ public class VideoManager : MonoBehaviour
 
     public IEnumerator DownloadAndPlayVideo(string url, string filename)
     {
-        UnityWebRequest www = new UnityWebRequest(url);
-        www.downloadHandler = new DownloadHandlerBuffer();
-        Debug.Log ("Downloading!");
-        yield return www.SendWebRequest();
+        if (!File.Exists(file(filename)))
+        {
+            UnityWebRequest www = new UnityWebRequest(url);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            Debug.Log("Downloading!");
+            yield return www.SendWebRequest();
 
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-            yield break;
-        }
-        else
-        {
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+                yield break;
+            }
             // Or retrieve results as binary data
-            //byte[] results = www.downloadHandler.data;
             File.WriteAllBytes(file(filename), www.downloadHandler.data);
-            videoPlayer.source = VideoSource.Url;
-            videoPlayer.url = file(filename);
-            videoPlayer.Prepare();
-            videoPlayer.prepareCompleted += PrepareCompleted;
-            Debug.LogError("VideoManager file path (2) is: " + file(filename));
         }
+        videoPlayer.source = VideoSource.Url;
+        videoPlayer.url = file(filename);
+        videoPlayer.Prepare();
+        videoPlayer.prepareCompleted += PrepareCompleted;
     }
     private string file(string filename)
     {
