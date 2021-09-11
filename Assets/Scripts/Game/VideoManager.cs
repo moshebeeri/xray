@@ -146,7 +146,6 @@ public class VideoManager : MonoBehaviour
         {
             UnityWebRequest www = new UnityWebRequest(url);
             www.downloadHandler = new DownloadHandlerBuffer();
-            Debug.Log("Downloading!");
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)

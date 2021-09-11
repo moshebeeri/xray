@@ -23,7 +23,7 @@ public class Video360Controller : MonoBehaviour
     {
         // Dictionary<string, object> location = ToursInfo.CurrentTourLocations[ToursInfo.CurrentLocationIndex];
         // Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
-        Dictionary<string, object> scene = ToursInfo.CurrentScene;
+        Dictionary<string, object> scene = ToursInfo.CurrentSceneData;
         if(!scene.ContainsKey("url"))
             return;
         string url = (string)scene["url"];

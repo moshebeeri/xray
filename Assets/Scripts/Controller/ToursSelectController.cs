@@ -9,26 +9,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class ToursSelectManager : MonoBehaviour
+public class ToursSelectController : MonoBehaviour
 {
     [Header("Preview")]
     public GameObject tourPreviewPrefab;
     public GameObject scrollView;
+    [Header("StateManager")]
+    public GameObject stateManagerContainer;
+    protected StateManager stateManager;
+
     [Header("Debug")]
     public TMP_Text debugText;
-
-    public GameObject stateManagerContainer;
-    StateManager stateManager;
 
     // Start is called before the first frame update
     async void Start()
     {
         stateManager = stateManagerContainer.GetComponent<StateManager>();
+        List<Dictionary<string, object>> tours = await stateManager.FetchTours();
+
 
         if(tourPreviewPrefab && scrollView)
         {
-            List<Dictionary<string, object>> tours = await stateManager.FetchTours();
-            foreach (Dictionary<string, object> tour in tours)
+			foreach (Dictionary<string, object> tour in tours)
             {
                 if(!tour.ContainsKey("Name"))
                 {
@@ -39,7 +41,9 @@ public class ToursSelectManager : MonoBehaviour
                 GameObject preview = Instantiate(tourPreviewPrefab) as GameObject;
                 preview.SetActive(true);
                 preview.GetComponent<TourPreview>().FromDictionary(tour);
-                preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked((string)tour["Id"]));
+                string tourId = (string)tour["Id"];
+				ToursInfo.Tours[tourId] = tour;
+				preview.GetComponent<Button>().onClick.AddListener(() => OnPreviewClicked(tourId));
                 TMP_Text title = preview.transform.Find("Title").GetComponent<TMP_Text>();
                 if(title != null)
                 {
@@ -61,47 +65,26 @@ public class ToursSelectManager : MonoBehaviour
     public void OnPreviewClicked(string tourId)
     {
         ToursInfo.CurrentTourId = tourId;
+        ToursInfo.CurrentTour = ToursInfo.Tours[tourId];
         Task task = PrepareAndLaunchTourAsync(tourId);
     }
     async Task PrepareAndLaunchTourAsync(string tourId)
     {
         Debug.Log(String.Format("PrepareAndLaunchTourAsync: tourId {0}", tourId));
         List<Dictionary<string, object>> locations = await stateManager.FetchTourLocations(tourId);
-        ToursInfo.CurrentTourLocations = locations;
+        ToursInfo.TourLocations = locations;
         ToursInfo.CurrentLocationIndex = 0;
         Dictionary<string, object> location = ToursInfo.Location();
         Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
+        ToursInfo.CurrentLocation = locationData;
         List<object> scenes = (List<object>)locationData["scenes"];
         Debug.Log(String.Format("PrepareAndLaunchTourAsync {0} scenes in location {1}", scenes.Count, (string)location["Id"]));
         if(scenes.Count > 0)
         {
             Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
-            Debug.Log((string)sceneData["type"]);
-            LoadNextScene(sceneData);
+            ToursInfo.CurrentSceneData = sceneData;
+            Loader.LoadScene(sceneData);
         }
-    }
-
-    private void LoadNextScene(Dictionary<string, object> scene)
-    {
-        ToursInfo.CurrentScene = scene;
-        switch (scene["type"])
-        {
-            case "360Video":
-                Loader.LoadVideo360Scene();
-                break;
-            case "360Gallery":
-                Loader.LoadGalleryPanoramicScene();
-                break;
-            case "VRMap":
-                Loader.LoadMapScene();
-                break;
-            case "Video":
-                Debug.LogError("Video Scene is not yet implemented");
-                break;
-            default:
-                break;
-        }
-        return;
     }
 
     public async void PopulateTours()

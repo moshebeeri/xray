@@ -48,4 +48,25 @@ public class Loader : MonoBehaviour
     {
         SceneManager.LoadScene("GalleryPanoramicScene");
     }
+
+    public static void LoadScene(Dictionary<string, object> scene)
+    {
+        switch (scene["type"])
+        {
+            case "360Video":
+                Loader.LoadVideo360Scene();
+                break;
+            case "360Gallery":
+                Loader.LoadGalleryPanoramicScene();
+                break;
+            case "VRMap":
+                Loader.LoadMapScene();
+                break;
+            case "Video":
+                Debug.LogError("Video Scene is not yet implemented");
+                break;
+            default:
+                break;
+        }
+    }
 }
