@@ -2,9 +2,8 @@
 using Google.Maps.Event;
 using Google.Maps.Examples.Shared;
 using UnityEngine;
-using Google.Maps.Feature.Style;
-using Google.Maps.Terrain;
-
+using System.Collections.Generic;
+using Firebase.Firestore;
 namespace Google.Maps.Examples {
   /// <summary>
   /// This example demonstrates a basic usage of the Maps SDK for Unity.
@@ -24,8 +23,10 @@ namespace Google.Maps.Examples {
         private void Start() {
         // Get required MapsService component on this GameObject.
             MapsService mapsService = GetComponent<MapsService>();
-            float lat = PlayerPrefs.GetFloat("Lat");
-            float lng = PlayerPrefs.GetFloat("Lng");
+            Dictionary<string, object> sceneData = ToursInfo.CurrentSceneData;
+            GeoPoint gp = (GeoPoint)sceneData["location"];
+            float lat = (float)gp.Latitude;// PlayerPrefs.GetFloat("Lat");
+            float lng = (float)gp.Longitude; //PlayerPrefs.GetFloat("Lng");
             if(lat > 0 && lng > 0)
             LatLng = new LatLng(lat, lng);
 

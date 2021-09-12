@@ -50,7 +50,7 @@ public class SceneController : MonoBehaviour
 		// 1. prev<-curr<-next
 		// 2. load next Assets and set it current
 		// 3. delete prev scene assets
-		object next = ToursInfo.NextSceneRef();
+		object next = ToursInfo.NextScene();
         if(next == null)
             return;
         ToursInfo.NextSceneData = await stateManager.FetchScene(next);
@@ -62,6 +62,7 @@ public class SceneController : MonoBehaviour
         ToursInfo.NextSceneData = null;
 		ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
+        //TODO: prepare next cache
     }
 
     public async void PreviousScene()
@@ -70,19 +71,24 @@ public class SceneController : MonoBehaviour
         // 1. prev->curr->next
         // 2. load prev Assets
 		// 3. delete next scene assets
-        Dictionary<string, object> next = ToursInfo.NextSceneData;
-		if (next == null)
+        object prev = ToursInfo.PrevScene();
+		if (prev == null)
 		{
-            Debug.Log("PreviousScene called with null next");
+            Debug.Log("PreviousScene called with null prev");
 			return;
 		}
+
+        ToursInfo.PreviousSceneData = await stateManager.FetchScene(prev);
+        if(ToursInfo.NextSceneData != null)
+            StartCoroutine(DeleteSceneData(ToursInfo.NextSceneData));
+		StartCoroutine(FetchSceneData(ToursInfo.PreviousSceneData));
+
 		ToursInfo.NextSceneData = ToursInfo.CurrentSceneData;
 		ToursInfo.CurrentSceneData = ToursInfo.PreviousSceneData;
-		object prev = ToursInfo.PrevScene();
-		ToursInfo.PreviousSceneData = await stateManager.FetchScene(prev);
-		StartCoroutine(DeleteSceneData(next));
-		StartCoroutine(FetchSceneData(ToursInfo.PreviousSceneData));
+        ToursInfo.PreviousSceneData = null;
 		ToursInfo.LogState();
+        Loader.LoadScene(ToursInfo.CurrentSceneData);
+        //TODO: prepare prev cache
     }
 
 	public void NextLocation()
@@ -124,7 +130,7 @@ public class SceneController : MonoBehaviour
         if((string)scene["type"] == "Video360")
         {
             URLFileHandler handler = new URLFileHandler("url");
-            StartCoroutine(handler.Fetch(stateManager, scene));
+            handler.Fetch(stateManager, scene);
         }
         yield break;
     }

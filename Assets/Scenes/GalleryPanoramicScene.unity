@@ -655,9 +655,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: VideoManager, Assembly-CSharp
-        m_MethodName: Play
+      - m_Target: {fileID: 1425342081}
+        m_TargetAssemblyTypeName: SkyboxPanoramicController, Assembly-CSharp
+        m_MethodName: prev
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

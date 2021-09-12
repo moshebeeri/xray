@@ -45,7 +45,7 @@ public class ToursInfo {
     }
     public static object PrevSceneRef()
     {
-        Dictionary<string, object> location = Location();
+        Dictionary<string, object> location = CurrentLocation;
         if(location == null)
 			return null;
         List<object> scenes = (List<object>)location["scenes"];
@@ -106,7 +106,13 @@ public class ToursInfo {
         if(NextSceneData != null)
             Debug.Log( String.Format("Next Scene: {0}", NextSceneData["name"]));
         if(PreviousSceneData != null)
-            Debug.Log( String.Format("Prev Scene: {0}", PreviousSceneData["name"]));
+        {
+            if(PreviousSceneData.ContainsKey("name"))
+                Debug.Log( String.Format("Prev Scene: {0}", PreviousSceneData["name"]));
+            else
+                Debug.LogError("NOT PreviousSceneData.ContainsKey name");
+        }
+
         Debug.Log( "------------End LogState--------------" );
 	}
 }
