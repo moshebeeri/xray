@@ -18,12 +18,12 @@ public class ToursInfo {
 
     public static Dictionary<string, object> Location()
     {
-        return TourLocations[ToursInfo.CurrentLocationIndex];
+        return TourLocations[CurrentLocationIndex];
     }
 
     public static object SceneRef()
     {
-        Dictionary<string, object> location = Location();
+        Dictionary<string, object> location = CurrentLocation;
         return ((List<object>)location["scenes"])[CurrentSceneIndex];
     }
     public static object NextSceneRef()
@@ -56,7 +56,7 @@ public class ToursInfo {
 
     public static Dictionary<string, object> NextLocation()
     {
-        if(TourLocations.Count >= CurrentLocationIndex+1)
+        if(TourLocations.Count > CurrentLocationIndex+1)
         {
             CurrentLocationIndex++;
             return TourLocations[CurrentLocationIndex];

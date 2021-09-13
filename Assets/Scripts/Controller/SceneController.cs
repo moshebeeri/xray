@@ -90,16 +90,35 @@ public class SceneController : MonoBehaviour
         Loader.LoadScene(ToursInfo.CurrentSceneData);
         //TODO: prepare prev cache
     }
+    private async void GetLocation(string locationId)
+    {
+        Dictionary<string, object> locationData = await stateManager.GetLocationById(locationId);
+        ToursInfo.CurrentLocation = locationData;
+        List<object> scenes = (List<object>)locationData["scenes"];
+        Debug.Log(String.Format("SceneController GetLocation - {0} scenes in location {1}", scenes.Count, locationId));
+        if(scenes.Count > 0)
+        {
+            Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
+            ToursInfo.CurrentSceneData = sceneData;
+            Loader.LoadScene(sceneData);
+        }
 
-	public void NextLocation()
+    }
+    public void NextLocation()
 	{
 		Debug.Log("NextLocation");
-        ToursInfo.LogState();
+        Dictionary<string, object> next = ToursInfo.NextLocation();
+        if(next != null)
+            GetLocation((string)next["Id"]);
 
+        ToursInfo.LogState();
 	}
 	public void PrevLocation()
     {
         Debug.Log("PrevLocation");
+        Dictionary<string, object> prev = ToursInfo.PrevLocation();
+        if(prev != null)
+            GetLocation((string)prev["Id"]);
         ToursInfo.LogState();
     }
 
@@ -107,12 +126,14 @@ public class SceneController : MonoBehaviour
     {
         Debug.Log("MainMenu");
         ToursInfo.LogState();
+        Loader.LoadMainScene();
     }
 
 	public void TourSelect()
     {
         Debug.Log("TourSelect");
         ToursInfo.LogState();
+        Loader.LoadToursSelectScene();
     }
 
     protected IEnumerator DeleteSceneData(Dictionary<string, object> scene)
