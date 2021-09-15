@@ -51,11 +51,19 @@ public class SceneController : MonoBehaviour
         bool showNextLocation = false;
         bool showPrevLocation = false;
 
-        showNextScene = ToursInfo.CurrentSceneIndex <  ((List<object>)ToursInfo.CurrentLocation["scenes"]).Count-1;
-        showPrevScene = ToursInfo.CurrentSceneIndex > 0;
-        showNextLocation = !showNextScene;
-        showPrevLocation = !showPrevScene;
+        bool LastLocation = ToursInfo.TourLocations.Count==0 || ToursInfo.CurrentLocationIndex == ToursInfo.TourLocations.Count - 1;
+        bool LastScene = ToursInfo.CurrentSceneIndex == ((List<object>)ToursInfo.CurrentLocation["scenes"]).Count - 1;
 
+        if( LastLocation && LastScene)
+        {
+            Debug.Log(String.Format("End of tour"));
+        }else{
+            showNextScene = ToursInfo.CurrentSceneIndex <  ((List<object>)ToursInfo.CurrentLocation["scenes"]).Count - 1;
+            showPrevScene = ToursInfo.CurrentSceneIndex > 0;
+            showNextLocation = !showNextScene;
+            showPrevLocation = !showPrevScene;
+
+        }
         nextScene.SetActive(showNextScene);
         prevScene.SetActive(showPrevScene);
         nextLocation.SetActive(showNextLocation);
@@ -92,9 +100,24 @@ public class SceneController : MonoBehaviour
         ToursInfo.NextSceneData = null;
 		ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
-        //TODO: prepare next cache
+        PrepareNextSceneCache();
     }
-
+    //TODO: Add next location first scene
+    async void PrepareNextSceneCache(){
+        object nextRef = ToursInfo.NextSceneRef();
+        if(nextRef == null)
+            return;
+        Dictionary<string, object> SceneData = await stateManager.FetchScene(nextRef);
+		StartCoroutine(FetchSceneData(SceneData));
+    }
+    //TODO: Add prev location first scene
+    async void PreparePrevCache(){
+        object prevRef = ToursInfo.PrevSceneRef();
+        if(prevRef == null)
+            return;
+        Dictionary<string, object> SceneData = await stateManager.FetchScene(prevRef);
+		StartCoroutine(FetchSceneData(SceneData));
+    }
     public async void PreviousScene()
     {
 		Debug.Log("PreviousScene");
@@ -118,7 +141,7 @@ public class SceneController : MonoBehaviour
         ToursInfo.PreviousSceneData = null;
 		ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
-        //TODO: prepare prev cache
+        PreparePrevCache();
     }
     private async void GetLocation(object locationRef)
     {
@@ -134,13 +157,13 @@ public class SceneController : MonoBehaviour
             Loader.LoadScene(sceneData);
         }
     }
+
     public void NextLocation()
 	{
 		Debug.Log("NextLocation");
         Dictionary<string, object> next = ToursInfo.NextLocation();
         if(next != null)
             GetLocation(next["Location"]);
-
         ToursInfo.LogState();
 	}
 	public void PrevLocation()

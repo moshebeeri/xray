@@ -14,9 +14,6 @@ public class SkyboxPanoramicController : MonoBehaviour
     List<string> pictures;
     int index = 0;
 
-    // string first_url = "https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FGS__0016.JPG?alt=media&token=c0412b8b-a107-429f-9ddb-0f9bdd63c619";
-    // string next_url = "https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FGS__0023.JPG?alt=media&token=2c23e798-ddd6-4cdf-9492-5e7da180fea0";
-
     public void next()
     {
         Debug.Log("next panoramic image");
@@ -50,7 +47,6 @@ public class SkyboxPanoramicController : MonoBehaviour
         PrevButton.SetActive(has_prev);
 
     }
-
     void Start()
     {
         scene = ToursInfo.CurrentSceneData;

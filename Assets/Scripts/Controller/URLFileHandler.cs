@@ -18,18 +18,20 @@ class URLFileHandler : MonoBehaviour
             yield break;
         string url = (string)scene[link_field_name];
         string filename = String.Format("{0}.mp4", url.GetHashCode().ToString("X"));
-        UnityWebRequest www = new UnityWebRequest(url);
-        www.downloadHandler = new DownloadHandlerBuffer();
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
+        if (!File.Exists(file(filename)))
         {
-            Debug.Log(www.error);
-            yield break;
-        }
-        // Or retrieve results as binary data
-        File.WriteAllBytes(file(filename), www.downloadHandler.data);
+            UnityWebRequest www = new UnityWebRequest(url);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            yield return www.SendWebRequest();
 
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+                yield break;
+            }
+            // Or retrieve results as binary data
+            File.WriteAllBytes(file(filename), www.downloadHandler.data);
+        }
     }
     private string file(string filename)
     {
