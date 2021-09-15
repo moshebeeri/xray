@@ -6,9 +6,16 @@ using UnityEngine;
 using System.Collections;
 
 public class SceneController : MonoBehaviour
-{    [Header("StateManager")]
+{
+    [Header("StateManager")]
     public GameObject stateManagerContainer;
     protected StateManager stateManager;
+
+    [Header("Auto Hide")]
+    public GameObject nextScene;
+    public GameObject prevScene;
+    public GameObject nextLocation;
+    public GameObject prevLocation;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +37,29 @@ public class SceneController : MonoBehaviour
             return nextSceneData;
         }
         return null;
+    }
+    void Update()
+    {
+        AutoHide();
+    }
+    private void AutoHide()
+    {
+        if(ToursInfo.CurrentLocation == null)
+            return;
+        bool showNextScene = false;
+        bool showPrevScene = false;
+        bool showNextLocation = false;
+        bool showPrevLocation = false;
+
+        showNextScene = ToursInfo.CurrentSceneIndex <  ((List<object>)ToursInfo.CurrentLocation["scenes"]).Count-1;
+        showPrevScene = ToursInfo.CurrentSceneIndex > 0;
+        showNextLocation = !showNextScene;
+        showPrevLocation = !showPrevScene;
+
+        nextScene.SetActive(showNextScene);
+        prevScene.SetActive(showPrevScene);
+        nextLocation.SetActive(showNextLocation);
+        prevLocation.SetActive(showPrevLocation);
     }
 
     async protected Task<Dictionary<string, object>> PreviousSceneData()
@@ -90,26 +120,26 @@ public class SceneController : MonoBehaviour
         Loader.LoadScene(ToursInfo.CurrentSceneData);
         //TODO: prepare prev cache
     }
-    private async void GetLocation(string locationId)
+    private async void GetLocation(object locationRef)
     {
-        Dictionary<string, object> locationData = await stateManager.GetLocationById(locationId);
+        Dictionary<string, object> locationData = await stateManager.FetchLocation(locationRef);
         ToursInfo.CurrentLocation = locationData;
         List<object> scenes = (List<object>)locationData["scenes"];
-        Debug.Log(String.Format("SceneController GetLocation - {0} scenes in location {1}", scenes.Count, locationId));
+        Debug.Log(String.Format("SceneController GetLocation - {0} scenes in location {1}", scenes.Count, locationData["Name"]));
         if(scenes.Count > 0)
         {
             Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
             ToursInfo.CurrentSceneData = sceneData;
+            ToursInfo.CurrentSceneIndex = 0;
             Loader.LoadScene(sceneData);
         }
-
     }
     public void NextLocation()
 	{
 		Debug.Log("NextLocation");
         Dictionary<string, object> next = ToursInfo.NextLocation();
         if(next != null)
-            GetLocation((string)next["Id"]);
+            GetLocation(next["Location"]);
 
         ToursInfo.LogState();
 	}
@@ -118,7 +148,7 @@ public class SceneController : MonoBehaviour
         Debug.Log("PrevLocation");
         Dictionary<string, object> prev = ToursInfo.PrevLocation();
         if(prev != null)
-            GetLocation((string)prev["Id"]);
+            GetLocation(prev["Location"]);
         ToursInfo.LogState();
     }
 

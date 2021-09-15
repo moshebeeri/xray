@@ -591,6 +591,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateManagerContainer: {fileID: 3680926438149143167}
+  nextScene: {fileID: 497152355931418904}
+  prevScene: {fileID: 497152357285625776}
+  nextLocation: {fileID: 497152356979916463}
+  prevLocation: {fileID: 497152356550427489}
 --- !u!1 &497152356979916463
 GameObject:
   m_ObjectHideFlags: 0

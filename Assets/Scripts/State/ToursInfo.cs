@@ -96,7 +96,7 @@ public class ToursInfo {
         if(CurrentTour != null)
             Debug.Log( String.Format("Tour: {0}", CurrentTour["Name"]) );
         if(CurrentLocation != null)
-            Debug.Log( String.Format("Location: {0}", CurrentLocation["Id"]) );
+            Debug.Log( String.Format("Location: {0}", CurrentLocation["Name"]) );
         Debug.Log( String.Format("CurrentSceneIndex: {0}", CurrentSceneIndex) );
         if(CurrentSceneData != null)
         {

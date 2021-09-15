@@ -75,7 +75,7 @@ public class ToursSelectController : MonoBehaviour
         ToursInfo.TourLocations = locations;
         ToursInfo.CurrentLocationIndex = 0;
         Dictionary<string, object> location = ToursInfo.Location();
-        Dictionary<string, object> locationData = await stateManager.GetLocationById((string)location["Id"]);
+        Dictionary<string, object> locationData = await stateManager.FetchLocation(location["Location"]);
         ToursInfo.CurrentLocation = locationData;
         List<object> scenes = (List<object>)locationData["scenes"];
         Debug.Log(String.Format("PrepareAndLaunchTourAsync {0} scenes in location {1}", scenes.Count, (string)location["Id"]));

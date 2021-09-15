@@ -175,15 +175,15 @@ public class StateManager : MonoBehaviour
         return tours;
     }
 
-    public async Task<Dictionary<string, object>>  GetLocationById(string locationId)
-    {
-        db = FirebaseFirestore.DefaultInstance;
-        DocumentReference locationRef = db.Collection("locations").Document(locationId);
-        DocumentSnapshot snapshot = await locationRef.GetSnapshotAsync();
-        Dictionary<string, object> location = snapshot.ToDictionary();
-        location["Id"] = locationId;
-        return location;
-    }
+    // public async Task<Dictionary<string, object>>  GetLocationById(string locationId)
+    // {
+    //     db = FirebaseFirestore.DefaultInstance;
+    //     DocumentReference locationRef = db.Collection("locations").Document(locationId);
+    //     DocumentSnapshot snapshot = await locationRef.GetSnapshotAsync();
+    //     Dictionary<string, object> location = snapshot.ToDictionary();
+    //     location["Id"] = locationId;
+    //     return location;
+    // }
     public async Task<List<Dictionary<string, object>>> FetchTourLocations(string tourId)
     {
         DocumentReference toursRef = db.Collection("tours").Document(tourId);
@@ -196,6 +196,13 @@ public class StateManager : MonoBehaviour
     public async Task<Dictionary<string, object>> FetchScene(object sceneRefObject)
     {
         DocumentReference sceneRef = (DocumentReference)sceneRefObject;
+        DocumentSnapshot snapshot = await sceneRef.GetSnapshotAsync();
+        Dictionary<string, object> scene = snapshot.ToDictionary();
+        return scene;
+    }
+    public async Task<Dictionary<string, object>> FetchLocation(object locationRefObject)
+    {
+        DocumentReference sceneRef = (DocumentReference)locationRefObject;
         DocumentSnapshot snapshot = await sceneRef.GetSnapshotAsync();
         Dictionary<string, object> scene = snapshot.ToDictionary();
         return scene;

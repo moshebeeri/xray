@@ -7,11 +7,12 @@ using UnityEngine.Networking;
 
 public class SkyboxPanoramicController : MonoBehaviour
 {
+    [Header("Next Prev Buttons auto hide")]
+    public GameObject NextButton;
+    public GameObject PrevButton;
     Dictionary<string, object> scene = null;
     List<string> pictures;
     int index = 0;
-    bool has_prev = true;
-    bool has_next = true;
 
     // string first_url = "https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FGS__0016.JPG?alt=media&token=c0412b8b-a107-429f-9ddb-0f9bdd63c619";
     // string next_url = "https://firebasestorage.googleapis.com/v0/b/xray-vr.appspot.com/o/TLV%2FPromenade%2FGS__0023.JPG?alt=media&token=2c23e798-ddd6-4cdf-9492-5e7da180fea0";
@@ -38,12 +39,16 @@ public class SkyboxPanoramicController : MonoBehaviour
 
     private void HandleBoundaries()
     {
-        has_prev = true;
-        has_next = true;
+        bool has_prev = true;
+        bool has_next = true;
         if(index == 0)
             has_prev = false;
         if(index == pictures.Count-1)
             has_next = false;
+
+        NextButton.SetActive(has_next);
+        PrevButton.SetActive(has_prev);
+
     }
 
     void Start()
