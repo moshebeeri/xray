@@ -37,7 +37,6 @@ public class ToursInfo {
 		List<object> scenes = (List<object>)location["scenes"];
         if(scenes.Count <= CurrentSceneIndex+1)
         {
-            Debug.LogError("scenes.Count <= CurrentSceneIndex+1: ");
             return null;
         }
         Debug.Log(String.Format("NextSceneRef Return scene index {0}",CurrentSceneIndex+1));

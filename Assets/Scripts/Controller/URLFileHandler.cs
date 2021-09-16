@@ -45,10 +45,10 @@ class URLFileHandler : MonoBehaviour
         return Path.Combine(Application.persistentDataPath, filename);
     }
 
-    public IEnumerator RemoveLocalData(Dictionary<string, object> scene)
+    public void RemoveLocalData(Dictionary<string, object> scene)
     {
         if(!scene.ContainsKey(link_field_name))
-            yield break;
+            return;
         string url = (string)scene[link_field_name];
         string filename = String.Format("{0}.mp4", url.GetHashCode().ToString("X"));
         File.Delete(file(filename));

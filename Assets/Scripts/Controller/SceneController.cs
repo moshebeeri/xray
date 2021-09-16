@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class SceneController : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class SceneController : MonoBehaviour
     void Start()
     {
         stateManager = stateManagerContainer.GetComponent<StateManager>();
+        PrepareNextSceneCache();
     }
 
     protected Dictionary<string, object> CurrnetSceneData()
@@ -93,14 +95,14 @@ public class SceneController : MonoBehaviour
             return;
         ToursInfo.NextSceneData = await stateManager.FetchScene(next);
         if(ToursInfo.PreviousSceneData != null)
-            StartCoroutine(DeleteSceneData(ToursInfo.PreviousSceneData));
-		StartCoroutine(FetchSceneData(ToursInfo.NextSceneData));
+            DeleteSceneData(ToursInfo.PreviousSceneData);
+        FetchSceneData(ToursInfo.NextSceneData);
 		ToursInfo.PreviousSceneData = ToursInfo.CurrentSceneData;
         ToursInfo.CurrentSceneData = ToursInfo.NextSceneData;
         ToursInfo.NextSceneData = null;
-		ToursInfo.LogState();
+		PrepareNextSceneCache();
+        ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
-        PrepareNextSceneCache();
     }
     //TODO: Add next location first scene
     async void PrepareNextSceneCache(){
@@ -108,7 +110,7 @@ public class SceneController : MonoBehaviour
         if(nextRef == null)
             return;
         Dictionary<string, object> SceneData = await stateManager.FetchScene(nextRef);
-		StartCoroutine(FetchSceneData(SceneData));
+		FetchSceneData(SceneData);
     }
     //TODO: Add prev location first scene
     async void PreparePrevCache(){
@@ -116,7 +118,7 @@ public class SceneController : MonoBehaviour
         if(prevRef == null)
             return;
         Dictionary<string, object> SceneData = await stateManager.FetchScene(prevRef);
-		StartCoroutine(FetchSceneData(SceneData));
+		FetchSceneData(SceneData);
     }
     public async void PreviousScene()
     {
@@ -133,15 +135,15 @@ public class SceneController : MonoBehaviour
 
         ToursInfo.PreviousSceneData = await stateManager.FetchScene(prev);
         if(ToursInfo.NextSceneData != null)
-            StartCoroutine(DeleteSceneData(ToursInfo.NextSceneData));
-		StartCoroutine(FetchSceneData(ToursInfo.PreviousSceneData));
+            DeleteSceneData(ToursInfo.NextSceneData);
+		FetchSceneData(ToursInfo.PreviousSceneData);
 
 		ToursInfo.NextSceneData = ToursInfo.CurrentSceneData;
 		ToursInfo.CurrentSceneData = ToursInfo.PreviousSceneData;
         ToursInfo.PreviousSceneData = null;
+        PreparePrevCache();
 		ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
-        PreparePrevCache();
     }
     private async void GetLocation(object locationRef)
     {
@@ -189,23 +191,59 @@ public class SceneController : MonoBehaviour
         Loader.LoadToursSelectScene();
     }
 
-    protected IEnumerator DeleteSceneData(Dictionary<string, object> scene)
+    protected void DeleteSceneData(Dictionary<string, object> scene)
     {
-        if((string)scene["type"] == "Video360")
+        if(scene != null && (string)scene["type"] == "360Video")
         {
-            URLFileHandler handler = new URLFileHandler("url");
-            StartCoroutine(handler.RemoveLocalData(scene));
+            RemoveCacheVideo(scene);
         }
-		yield break;
 	}
 
-    protected IEnumerator FetchSceneData(Dictionary<string, object> scene)
+    protected void FetchSceneData(Dictionary<string, object> scene)
     {
-        if((string)scene["type"] == "Video360")
+        if(scene != null && (string)scene["type"] == "360Video")
         {
-            URLFileHandler handler = new URLFileHandler("url");
-            handler.Fetch(stateManager, scene);
+            StartCoroutine(FetchAndCacheVideo(scene));
         }
-        yield break;
+    }
+
+    public IEnumerator FetchAndCacheVideo(Dictionary<string, object> scene)
+    {
+        string url = (string)scene["url"];
+        string filename = String.Format("{0}.mp4", url.GetHashCode().ToString("X"));
+        if (!File.Exists(file(filename)))
+        {
+            UnityWebRequest www = new UnityWebRequest(url);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+                yield break;
+            }
+            // Or retrieve results as binary data
+            File.WriteAllBytes(file(filename), www.downloadHandler.data);
+        }
+    }
+    private string file(string filename)
+    {
+        if(Application.platform == RuntimePlatform.OSXEditor)
+            return Path.Combine("/Users/m/temp/", filename);
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            //"/sdcard/Download/"
+            return Path.Combine(Application.persistentDataPath, filename);
+        }
+        return Path.Combine(Application.persistentDataPath, filename);
+    }
+
+    public void RemoveCacheVideo(Dictionary<string, object> scene)
+    {
+        if(!scene.ContainsKey("url"))
+            return;
+        string url = (string)scene["url"];
+        string filename = String.Format("{0}.mp4", url.GetHashCode().ToString("X"));
+        File.Delete(file(filename));
     }
 }
