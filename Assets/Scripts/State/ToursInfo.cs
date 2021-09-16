@@ -88,6 +88,19 @@ public class ToursInfo {
             CurrentSceneIndex--;
         return s;
     }
+    public static void ResetState()
+    {
+        ToursInfo.Tours = new Dictionary<string, Dictionary<string, object>>();
+        ToursInfo.CurrentSceneData = null;
+        ToursInfo.CurrentSceneIndex = 0;
+        ToursInfo.PreviousSceneData = null;
+        ToursInfo.NextSceneData = null;
+        ToursInfo.CurrentLocation = null;
+        ToursInfo.CurrentLocationIndex = 0;
+        ToursInfo.TourLocations = null;
+        ToursInfo.CurrentTour = null;
+        ToursInfo.CurrentTourId = null;
+    }
 
     public static void LogState()
     {

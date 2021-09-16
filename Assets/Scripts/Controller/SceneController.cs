@@ -145,7 +145,7 @@ public class SceneController : MonoBehaviour
 		ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
     }
-    private async void GetLocation(object locationRef)
+    private async void GetLocation(object locationRef, bool isNext)
     {
         Dictionary<string, object> locationData = await stateManager.FetchLocation(locationRef);
         ToursInfo.CurrentLocation = locationData;
@@ -154,6 +154,16 @@ public class SceneController : MonoBehaviour
         if(scenes.Count > 0)
         {
             Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
+            if(isNext)
+            {
+                if(ToursInfo.PreviousSceneData != null)
+                    DeleteSceneData(ToursInfo.PreviousSceneData);
+                ToursInfo.PreviousSceneData = ToursInfo.CurrentSceneData;
+            }else{
+                if(ToursInfo.NextSceneData != null)
+                    DeleteSceneData(ToursInfo.NextSceneData);
+                ToursInfo.NextSceneData = ToursInfo.CurrentSceneData;
+            }
             ToursInfo.CurrentSceneData = sceneData;
             ToursInfo.CurrentSceneIndex = 0;
             Loader.LoadScene(sceneData);
@@ -165,7 +175,7 @@ public class SceneController : MonoBehaviour
 		Debug.Log("NextLocation");
         Dictionary<string, object> next = ToursInfo.NextLocation();
         if(next != null)
-            GetLocation(next["Location"]);
+            GetLocation(next["Location"], true);
         ToursInfo.LogState();
 	}
 	public void PrevLocation()
@@ -173,7 +183,7 @@ public class SceneController : MonoBehaviour
         Debug.Log("PrevLocation");
         Dictionary<string, object> prev = ToursInfo.PrevLocation();
         if(prev != null)
-            GetLocation(prev["Location"]);
+            GetLocation(prev["Location"], false);
         ToursInfo.LogState();
     }
 
@@ -181,6 +191,7 @@ public class SceneController : MonoBehaviour
     {
         Debug.Log("MainMenu");
         ToursInfo.LogState();
+        ResetState();
         Loader.LoadMainScene();
     }
 
@@ -188,17 +199,27 @@ public class SceneController : MonoBehaviour
     {
         Debug.Log("TourSelect");
         ToursInfo.LogState();
+        ResetState();
         Loader.LoadToursSelectScene();
+    }
+
+    public void ResetState()
+    {
+        DeleteSceneData(ToursInfo.CurrentSceneData);
+        DeleteSceneData(ToursInfo.PreviousSceneData);
+        DeleteSceneData(ToursInfo.NextSceneData);
+        ToursInfo.ResetState();
     }
 
     protected void DeleteSceneData(Dictionary<string, object> scene)
     {
-        if(scene != null && (string)scene["type"] == "360Video")
+        if(scene == null)
+            return;
+        if((string)scene["type"] == "360Video")
         {
-            RemoveCacheVideo(scene);
+            CacheUtils.RemoveCacheVideo(scene);
         }
 	}
-
     protected void FetchSceneData(Dictionary<string, object> scene)
     {
         if(scene != null && (string)scene["type"] == "360Video")
@@ -207,11 +228,50 @@ public class SceneController : MonoBehaviour
         }
     }
 
+    public IEnumerator FetchAndCacheGallery(Dictionary<string, object> scene)
+    {
+        if(scene == null || !scene.ContainsKey("pictures"))
+        {
+            Debug.LogError("scene == null || !scene.ContainsKey(pictures)");
+            yield break;
+        }
+        List<object> object_pictures = (List<object>)scene["pictures"];
+
+        foreach (object pic_obj in object_pictures)
+        {
+            string pic_url = (string)pic_obj;
+            string filename = CacheUtils.fileForUrl(pic_url, "JPG");
+            if (!File.Exists(filename))
+            {
+                UnityWebRequest www = new UnityWebRequest(pic_url);
+                www.downloadHandler = new DownloadHandlerBuffer();
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log(www.error);
+                }
+                else{
+                    File.WriteAllBytes(filename, www.downloadHandler.data);
+                }
+            }
+        }
+    }
     public IEnumerator FetchAndCacheVideo(Dictionary<string, object> scene)
     {
+        if(scene == null || !scene.ContainsKey("url"))
+        {
+            Debug.LogError("scene == null || !scene.ContainsKey(url)");
+            yield break;
+        }
         string url = (string)scene["url"];
-        string filename = String.Format("{0}.mp4", url.GetHashCode().ToString("X"));
-        if (!File.Exists(file(filename)))
+        string extension = "mp4";
+        StartCoroutine(FetchAndCacheURL(url, extension));
+    }
+    public IEnumerator FetchAndCacheURL(string url, string extension)
+    {
+        string filename = CacheUtils.fileForUrl(url, extension);
+        if (!File.Exists(CacheUtils.file(filename)))
         {
             UnityWebRequest www = new UnityWebRequest(url);
             www.downloadHandler = new DownloadHandlerBuffer();
@@ -223,27 +283,11 @@ public class SceneController : MonoBehaviour
                 yield break;
             }
             // Or retrieve results as binary data
-            File.WriteAllBytes(file(filename), www.downloadHandler.data);
+            File.WriteAllBytes(filename, www.downloadHandler.data);
         }
-    }
-    private string file(string filename)
-    {
-        if(Application.platform == RuntimePlatform.OSXEditor)
-            return Path.Combine("/Users/m/temp/", filename);
-        if(Application.platform == RuntimePlatform.Android)
-        {
-            //"/sdcard/Download/"
-            return Path.Combine(Application.persistentDataPath, filename);
-        }
-        return Path.Combine(Application.persistentDataPath, filename);
     }
 
-    public void RemoveCacheVideo(Dictionary<string, object> scene)
-    {
-        if(!scene.ContainsKey("url"))
-            return;
-        string url = (string)scene["url"];
-        string filename = String.Format("{0}.mp4", url.GetHashCode().ToString("X"));
-        File.Delete(file(filename));
-    }
+
+
+
 }

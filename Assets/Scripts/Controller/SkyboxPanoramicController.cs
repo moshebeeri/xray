@@ -70,4 +70,13 @@ public class SkyboxPanoramicController : MonoBehaviour
         HandleBoundaries();
         RenderSettings.skybox.mainTexture = DownloadHandlerTexture.GetContent(request);
     }
+
+    //see: https://forum.unity.com/threads/changing-skybox-material-at-runtime.547177/
+    void setCachedImage()
+    {
+        string file = CacheUtils.fileForUrl(pictures[index], "JPG");
+        Texture t = Resources.Load<Texture>(file);
+        HandleBoundaries();
+        RenderSettings.skybox.mainTexture = t;
+    }
 }

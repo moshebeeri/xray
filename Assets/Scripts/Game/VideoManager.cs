@@ -137,12 +137,14 @@ public class VideoManager : MonoBehaviour
     }
     private void OnLoop(VideoPlayer videoPlayer)
     {
+        //TODO: Send SceneEnded Event
         //Next();
     }
 
-    public IEnumerator DownloadAndPlayVideo(string url, string filename)
+    public IEnumerator DownloadAndPlayVideo(string url)
     {
-        if (!File.Exists(file(filename)))
+        string filename = CacheUtils.fileForUrl(url, "mp4");
+        if (!File.Exists(filename))
         {
             UnityWebRequest www = new UnityWebRequest(url);
             www.downloadHandler = new DownloadHandlerBuffer();
@@ -154,23 +156,12 @@ public class VideoManager : MonoBehaviour
                 yield break;
             }
             // Or retrieve results as binary data
-            File.WriteAllBytes(file(filename), www.downloadHandler.data);
+            File.WriteAllBytes(filename, www.downloadHandler.data);
         }
         videoPlayer.source = VideoSource.Url;
-        videoPlayer.url = file(filename);
+        videoPlayer.url = filename;
         videoPlayer.Prepare();
         videoPlayer.prepareCompleted += PrepareCompleted;
-    }
-    private string file(string filename)
-    {
-        if(Application.platform == RuntimePlatform.OSXEditor)
-            return Path.Combine("/Users/m/temp/", filename);
-        if(Application.platform == RuntimePlatform.Android)
-        {
-            //"/sdcard/Download/"
-            return Path.Combine(Application.persistentDataPath, filename);
-        }
-        return Path.Combine(Application.persistentDataPath, filename);
     }
 }
 
