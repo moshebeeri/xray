@@ -24,8 +24,6 @@ public class Video360Controller : MonoBehaviour
         Dictionary<string, object> scene = ToursInfo.CurrentSceneData;
         if(!scene.ContainsKey("url"))
             return;
-        // string url = (string)scene["url"];
-        // string name = String.Format("{0}.mp4", url.GetHashCode().ToString("X"));
         StartCoroutine(videoManager.DownloadAndPlayVideo((string)scene["url"]));
     }
 }

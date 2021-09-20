@@ -215,16 +215,28 @@ public class SceneController : MonoBehaviour
     {
         if(scene == null)
             return;
-        if((string)scene["type"] == "360Video")
-        {
-            CacheUtils.RemoveCacheVideo(scene);
+        string type = (string)scene["type"];
+        switch (type) {
+            case "360Video":
+                CacheUtils.RemoveCacheVideo(scene);
+                break;
+            case "360Gallery":
+                CacheUtils.RemoveCacheGallery(scene);
+                break;
         }
 	}
     protected void FetchSceneData(Dictionary<string, object> scene)
     {
-        if(scene != null && (string)scene["type"] == "360Video")
-        {
-            StartCoroutine(FetchAndCacheVideo(scene));
+        if(scene == null)
+            return;
+        string type = (string)scene["type"];
+        switch (type) {
+            case "360Video":
+                StartCoroutine(FetchAndCacheVideo(scene));
+                break;
+            case "360Gallery":
+                StartCoroutine(FetchAndCacheGallery(scene));
+                break;
         }
     }
 

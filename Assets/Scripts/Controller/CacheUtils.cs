@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 
 class CacheUtils
 {
+    private static Dictionary<string, object> DownloadingAssets = new Dictionary<string, object>();
     public static string file(string filename)
     {
         if(Application.platform == RuntimePlatform.OSXEditor)
@@ -33,11 +34,11 @@ class CacheUtils
 
     public static void RemoveCacheVideo(Dictionary<string, object> scene)
     {
-        if(!scene.ContainsKey("url"))
-            return;
-        string filename = fileForUrl((string)scene["url"], "mp4");
-        if (File.Exists(filename))
-            File.Delete(filename);
+        // if(!scene.ContainsKey("url"))
+        //     return;
+        // string filename = fileForUrl((string)scene["url"], "mp4");
+        // if (File.Exists(filename))
+        //     File.Delete(filename);
     }
 
     public static void RemoveCacheGallery(Dictionary<string, object> scene)
@@ -56,4 +57,17 @@ class CacheUtils
                 File.Delete(filename);
         }
     }
+
+    internal static bool IsCached(string url, string extension)
+    {
+        return File.Exists(fileForUrl(url, extension));
+    }
+
+    public static void Downloading(string url){
+
+    }
+    public static void DownloadingDone(string url)
+    {
+    }
+
 }

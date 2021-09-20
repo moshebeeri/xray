@@ -2,6 +2,7 @@
 // https://forum.unity.com/threads/how-to-set-a-skybox-from-an-image-url.420476/
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -61,10 +62,11 @@ public class SkyboxPanoramicController : MonoBehaviour
             pictures.Add((string)o);
         StartCoroutine(setImage());
     }
-
     IEnumerator setImage()
     {
         string url = pictures[index];
+        if (CacheUtils.IsCached(url, "JPG"))
+            url = "file://" + CacheUtils.fileForUrl(pictures[index], "JPG");
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
         yield return request.SendWebRequest();
         HandleBoundaries();
@@ -75,8 +77,8 @@ public class SkyboxPanoramicController : MonoBehaviour
     void setCachedImage()
     {
         string file = CacheUtils.fileForUrl(pictures[index], "JPG");
-        Texture t = Resources.Load<Texture>(file);
+        Texture texture = Resources.Load<Texture>( file );
         HandleBoundaries();
-        RenderSettings.skybox.mainTexture = t;
+        RenderSettings.skybox.mainTexture = texture;
     }
 }

@@ -34,10 +34,10 @@ public class ToursSelectController : MonoBehaviour
             {
                 if(!tour.ContainsKey("Name"))
                 {
-                    Debug.Log(String.Format("Name not found in dictionary"));
+                    Debug.Log(String.Format("XRAY: Name not found in dictionary"));
                     continue;
                 }
-                Debug.Log(String.Format("Name: {0}", tour["Name"]));
+                Debug.Log(String.Format("XRAY: Name: {0}", tour["Name"]));
                 GameObject preview = Instantiate(tourPreviewPrefab) as GameObject;
                 preview.SetActive(true);
                 preview.GetComponent<TourPreview>().FromDictionary(tour);
@@ -58,7 +58,7 @@ public class ToursSelectController : MonoBehaviour
         }
         else
         {
-            Debug.Log("tourPreviewPrefab and scrollView should be populated");
+            Debug.Log("XRAY: tourPreviewPrefab and scrollView should be populated");
         }
     }
 
@@ -70,7 +70,7 @@ public class ToursSelectController : MonoBehaviour
     }
     async Task PrepareAndLaunchTourAsync(string tourId)
     {
-        Debug.Log(String.Format("PrepareAndLaunchTourAsync: tourId {0}", tourId));
+        Debug.Log(String.Format("XRAY: PrepareAndLaunchTourAsync: tourId {0}", tourId));
         List<Dictionary<string, object>> locations = await stateManager.FetchTourLocations(tourId);
         ToursInfo.TourLocations = locations;
         ToursInfo.CurrentLocationIndex = 0;
@@ -78,7 +78,7 @@ public class ToursSelectController : MonoBehaviour
         Dictionary<string, object> locationData = await stateManager.FetchLocation(location["Location"]);
         ToursInfo.CurrentLocation = locationData;
         List<object> scenes = (List<object>)locationData["scenes"];
-        Debug.Log(String.Format("PrepareAndLaunchTourAsync {0} scenes in location {1}", scenes.Count, (string)location["Id"]));
+        Debug.Log(String.Format("XRAY: PrepareAndLaunchTourAsync {0} scenes in location {1}", scenes.Count, (string)location["Id"]));
         if(scenes.Count > 0)
         {
             Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
@@ -87,15 +87,15 @@ public class ToursSelectController : MonoBehaviour
         }
     }
 
-    public async void PopulateTours()
-    {
-        List<Dictionary<string, object>> tours = await stateManager.FetchTours();
-        Debug.Log(String.Format("Number of tours {0}", tours.Count));
-        foreach (Dictionary<string, object> tour in tours)
-        {
-            Debug.Log(String.Format("Name: {0}", tour["Name"]));
-        }
-    }
+    // public async void PopulateTours()
+    // {
+    //     List<Dictionary<string, object>> tours = await stateManager.FetchTours();
+    //     Debug.Log(String.Format("XRAY: Number of tours {0}", tours.Count));
+    //     foreach (Dictionary<string, object> tour in tours)
+    //     {
+    //         Debug.Log(String.Format("XRAY: Name: {0}", tour["Name"]));
+    //     }
+    // }
 
     // void FixedUpdate() {
     //     GameObject preview = Instantiate(tourPreviewPrefab, new Vector3(0,0,0), Quaternion.identity);

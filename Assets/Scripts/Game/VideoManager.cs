@@ -79,6 +79,8 @@ public class VideoManager : MonoBehaviour
     {
         videoPlayer.Pause();
     }
+
+    //TODO: try this method https://stackoverflow.com/questions/50517102/play-large-video-on-android-without-lagging/50538018#50538018
     public void url(string url)
     {
         videoPlayer.source = VideoSource.Url;
