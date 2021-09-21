@@ -62,6 +62,14 @@ public class ToursInfo {
         }
         return null;
     }
+    public static Dictionary<string, object> HasNextLocation()
+    {
+        if(TourLocations.Count > CurrentLocationIndex+1)
+        {
+            return TourLocations[CurrentLocationIndex+1];
+        }
+        return null;
+    }
 
     public static Dictionary<string, object> PrevLocation()
     {
@@ -69,6 +77,14 @@ public class ToursInfo {
         {
             CurrentLocationIndex--;
             return TourLocations[CurrentLocationIndex];
+        }
+        return null;
+    }
+    public static Dictionary<string, object> HasPrevLocation()
+    {
+        if(CurrentLocationIndex>0)
+        {
+            return TourLocations[CurrentLocationIndex-1];
         }
         return null;
     }

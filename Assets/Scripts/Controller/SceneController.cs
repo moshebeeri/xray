@@ -22,6 +22,7 @@ public class SceneController : MonoBehaviour
     void Start()
     {
         stateManager = stateManagerContainer.GetComponent<StateManager>();
+        DontDestroyOnLoad(this);
         PrepareNextSceneCache();
     }
 
@@ -104,21 +105,56 @@ public class SceneController : MonoBehaviour
         ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
     }
-    //TODO: Add next location first scene
     async void PrepareNextSceneCache(){
         object nextRef = ToursInfo.NextSceneRef();
-        if(nextRef == null)
-            return;
-        Dictionary<string, object> SceneData = await stateManager.FetchScene(nextRef);
-		FetchSceneData(SceneData);
+        if(nextRef != null)
+        {
+            Dictionary<string, object> SceneData = await stateManager.FetchScene(nextRef);
+            FetchSceneData(SceneData);
+        }
+        else
+        {   //last scene of current location
+            Dictionary<string, object> location = ToursInfo.HasNextLocation();
+            if(nextRef != null)
+            {
+                // Cache the first scene of next location
+                //TODO: Cache next location data
+                Dictionary<string, object> locationData = await stateManager.FetchLocation(location["Location"]);
+                ToursInfo.CurrentLocation = locationData;
+                List<object> scenes = (List<object>)locationData["scenes"];
+                if (scenes.Count > 0)
+                {
+                    Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
+                    FetchSceneData(sceneData);
+                }
+            }
+        }
+
     }
-    //TODO: Add prev location first scene
-    async void PreparePrevCache(){
+    async void PreparePrevSceneCache(){
         object prevRef = ToursInfo.PrevSceneRef();
-        if(prevRef == null)
-            return;
-        Dictionary<string, object> SceneData = await stateManager.FetchScene(prevRef);
-		FetchSceneData(SceneData);
+        if (prevRef != null)
+        {
+            Dictionary<string, object> SceneData = await stateManager.FetchScene(prevRef);
+            FetchSceneData(SceneData);
+        }
+        else
+        {   //last scene of current location
+            Dictionary<string, object> location = ToursInfo.HasNextLocation();
+            if(location != null)
+            {
+                // Cache the first scene of next location
+                //TODO:Save prev location
+                Dictionary<string, object> locationData = await stateManager.FetchLocation(location["Location"]);
+                ToursInfo.CurrentLocation = locationData;
+                List<object> scenes = (List<object>)locationData["scenes"];
+                if (scenes.Count > 0)
+                {
+                    Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[scenes.Count-1]);
+                    FetchSceneData(sceneData);
+                }
+            }
+        }
     }
     public async void PreviousScene()
     {
@@ -141,7 +177,7 @@ public class SceneController : MonoBehaviour
 		ToursInfo.NextSceneData = ToursInfo.CurrentSceneData;
 		ToursInfo.CurrentSceneData = ToursInfo.PreviousSceneData;
         ToursInfo.PreviousSceneData = null;
-        PreparePrevCache();
+        PreparePrevSceneCache();
 		ToursInfo.LogState();
         Loader.LoadScene(ToursInfo.CurrentSceneData);
     }
@@ -153,19 +189,22 @@ public class SceneController : MonoBehaviour
         Debug.Log(String.Format("SceneController GetLocation - {0} scenes in location {1}", scenes.Count, locationData["Name"]));
         if(scenes.Count > 0)
         {
-            Dictionary<string, object> sceneData = await stateManager.FetchScene(scenes[0]);
+            Dictionary<string, object> sceneData = null;
             if(isNext)
             {
+                sceneData = await stateManager.FetchScene(scenes[0]);
                 if(ToursInfo.PreviousSceneData != null)
                     DeleteSceneData(ToursInfo.PreviousSceneData);
                 ToursInfo.PreviousSceneData = ToursInfo.CurrentSceneData;
+                ToursInfo.CurrentSceneIndex = 0;
             }else{
+                sceneData = await stateManager.FetchScene(scenes[scenes.Count-1]);
                 if(ToursInfo.NextSceneData != null)
                     DeleteSceneData(ToursInfo.NextSceneData);
                 ToursInfo.NextSceneData = ToursInfo.CurrentSceneData;
+                ToursInfo.CurrentSceneIndex = scenes.Count-1;
             }
             ToursInfo.CurrentSceneData = sceneData;
-            ToursInfo.CurrentSceneIndex = 0;
             Loader.LoadScene(sceneData);
         }
     }
@@ -298,8 +337,4 @@ public class SceneController : MonoBehaviour
             File.WriteAllBytes(filename, www.downloadHandler.data);
         }
     }
-
-
-
-
 }
