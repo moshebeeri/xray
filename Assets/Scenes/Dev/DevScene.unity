@@ -1506,10 +1506,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3fbf3a70a1974cb496d09ec56c72bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 847854494}
-  duration: 1.5
-  waitBefore: 1
-  waitBetween: 5
 --- !u!114 &847854494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1835,6 +1831,7 @@ GameObject:
   - component: {fileID: 1267854966}
   - component: {fileID: 1267854968}
   - component: {fileID: 1267854967}
+  - component: {fileID: 1267854969}
   m_Layer: 5
   m_Name: DebugPanel
   m_TagString: Untagged
@@ -1900,6 +1897,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1267854965}
   m_CullTransparentMesh: 1
+--- !u!114 &1267854969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267854965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c17431c4954542a2893069a709b6a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 1.5
+  waitBefore: 1
 --- !u!1001 &1283564843
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2896,7 +2907,7 @@ RectTransform:
   m_GameObject: {fileID: 2048247952}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.322175, z: 1}
   m_Children:
   - {fileID: 1651590498}
   m_Father: {fileID: 965350097}
