@@ -22,6 +22,11 @@ public class SceneController : MonoBehaviour
     void Start()
     {
         stateManager = stateManagerContainer.GetComponent<StateManager>();
+// transform.parent = null;
+// DontDestroyOnLoad(this);
+
+// DontDestroyOnLoad(transform.root);
+
         DontDestroyOnLoad(this);
         PrepareNextSceneCache();
     }

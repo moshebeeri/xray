@@ -14,7 +14,7 @@ public class SkyboxPanoramicController : MonoBehaviour
     Dictionary<string, object> scene = null;
     List<string> pictures;
     int index = 0;
-
+    FadeUtils controllerUtils = new FadeUtils();
     public void next()
     {
         Debug.Log("next panoramic image");
@@ -62,6 +62,12 @@ public class SkyboxPanoramicController : MonoBehaviour
             pictures.Add((string)o);
         StartCoroutine(setImage());
     }
+
+    private void onExposureUpdate(float value)
+    {
+        RenderSettings.skybox.SetFloat("_Exposure", value);
+    }
+
     IEnumerator setImage()
     {
         string url = pictures[index];
@@ -70,15 +76,27 @@ public class SkyboxPanoramicController : MonoBehaviour
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
         yield return request.SendWebRequest();
         HandleBoundaries();
-        RenderSettings.skybox.mainTexture = DownloadHandlerTexture.GetContent(request);
+        Texture texture = DownloadHandlerTexture.GetContent(request);
+        // Fade out
+        float startFade = RenderSettings.skybox.GetFloat("_Exposure");
+        yield return StartCoroutine(controllerUtils.Interpolate(0.15f, startFade, 0.0f, onExposureUpdate));
+        // you can keep user rotation like so: TODO: add ability to rotate, keep and restore rotation
+        // RenderSettings.skybox.SetFloat("_Rotation", environment.m_worldRotation)
+
+        // Set Texture
+        RenderSettings.skybox.mainTexture = texture;
+        // Fade in
+        startFade = RenderSettings.skybox.GetFloat("_Exposure");
+        yield return StartCoroutine(controllerUtils.Interpolate(0.15f, startFade, 1.0f, onExposureUpdate));
     }
 
+    //did not worked
     //see: https://forum.unity.com/threads/changing-skybox-material-at-runtime.547177/
-    void setCachedImage()
-    {
-        string file = CacheUtils.fileForUrl(pictures[index], "JPG");
-        Texture texture = Resources.Load<Texture>( file );
-        HandleBoundaries();
-        RenderSettings.skybox.mainTexture = texture;
-    }
+    // void setCachedImage()
+    // {
+    //     string file = CacheUtils.fileForUrl(pictures[index], "JPG");
+    //     Texture texture = Resources.Load<Texture>( file );
+    //     HandleBoundaries();
+    //     RenderSettings.skybox.mainTexture = texture;
+    // }
 }
