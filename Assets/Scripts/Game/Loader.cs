@@ -44,9 +44,15 @@ public class Loader : MonoBehaviour
     {
         SceneManager.LoadScene("TourSelectScene");
     }
+
     public static void LoadGalleryPanoramicScene()
     {
         SceneManager.LoadScene("GalleryPanoramicScene");
+    }
+
+    public static void LoadVideoFlightScene()
+    {
+        SceneManager.LoadScene("VideoFlightScene");
     }
 
     public static void LoadScene(Dictionary<string, object> scene)
@@ -62,8 +68,8 @@ public class Loader : MonoBehaviour
             case "VRMap":
                 Loader.LoadMapScene();
                 break;
-            case "Video":
-                Debug.LogError("Video Scene is not yet implemented");
+            case "VideoFlight":
+                Loader.LoadVideoFlightScene();;
                 break;
             default:
                 break;

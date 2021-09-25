@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GalleryPanoramicScene.unity
     guid: bef1c6dc9d7db494ab5544b9b08e8be5
+  - enabled: 1
+    path: Assets/Scenes/VideoFlightScene.unity
+    guid: 775ee6a090301449781fe8634cb6c3b6
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3af63c10a0d4745e18e0d402d221d379, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: abb7174b586d24f7bb1c4a7d4b0a51e1, type: 2}

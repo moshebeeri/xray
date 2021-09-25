@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.Video;
 using Debug = UnityEngine.Debug;
@@ -35,6 +36,8 @@ public class VideoManager : MonoBehaviour
         }
     }
 
+    UnityAction<string> OnSceneEnded;
+
     private int index = 0;
 
   // Start is called before the first frame update
@@ -42,15 +45,18 @@ public class VideoManager : MonoBehaviour
     {
         if(videoPlayer == null)
             Debug.Log("NULL Video Player");
-        //videoPlayer = GetComponent<VideoPlayer>();
+        videoPlayer.seekCompleted += OnComplete;
+        videoPlayer.prepareCompleted += OnComplete;
+        videoPlayer.loopPointReached += OnLoop;
     }
 
     public void Awake()
     {
-        //videoPlayer = GetComponent<VideoPlayer>();
-        // videoPlayer.seekCompleted += OnComplete;
-        // videoPlayer.prepareCompleted += OnComplete;
-        // videoPlayer.loopPointReached += OnLoop;
+        if(videoPlayer == null)
+            Debug.Log("NULL Video Player");
+        videoPlayer.seekCompleted += OnComplete;
+        videoPlayer.prepareCompleted += OnComplete;
+        videoPlayer.loopPointReached += OnLoop;
     }
     public void PauseToggle()
     {
@@ -139,12 +145,13 @@ public class VideoManager : MonoBehaviour
     }
     private void OnLoop(VideoPlayer videoPlayer)
     {
-        //TODO: Send SceneEnded Event
-        //Next();
+        if(OnSceneEnded != null)
+            OnSceneEnded("VideoManager");
     }
 
-    public IEnumerator DownloadAndPlayVideo(string url)
+    public IEnumerator DownloadAndPlayVideo(string url, UnityAction<string> OnSceneEnded = null)
     {
+        this.OnSceneEnded = OnSceneEnded;
         string filename = CacheUtils.fileForUrl(url, "mp4");
         if (!File.Exists(filename))
         {

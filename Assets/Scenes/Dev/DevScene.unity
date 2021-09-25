@@ -1909,8 +1909,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c17431c4954542a2893069a709b6a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 1.5
+  duration: 5
   waitBefore: 1
+  autoFade: 1
 --- !u!1001 &1283564843
 PrefabInstance:
   m_ObjectHideFlags: 0

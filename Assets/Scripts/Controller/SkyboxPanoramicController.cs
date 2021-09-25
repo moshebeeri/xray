@@ -6,11 +6,12 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class SkyboxPanoramicController : MonoBehaviour
+public class SkyboxPanoramicController : SceneMonoBehaviour
 {
     [Header("Next Prev Buttons auto hide")]
     public GameObject NextButton;
     public GameObject PrevButton;
+
     Dictionary<string, object> scene = null;
     List<string> pictures;
     int index = 0;
@@ -48,8 +49,10 @@ public class SkyboxPanoramicController : MonoBehaviour
         PrevButton.SetActive(has_prev);
 
     }
-    void Start()
+
+    new void Start()
     {
+        base.Start();
         scene = ToursInfo.CurrentSceneData;
         if (!scene.ContainsKey("pictures"))
         {
