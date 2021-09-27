@@ -3,19 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Video360Controller : MonoBehaviour
+public class Video360Controller : SceneMonoBehaviour
 {
     [Header("Scripts")]
     public GameObject stateManagerContainer;
     public GameObject videoManagerContainer;
+
     StateManager stateManager;
     VideoManager videoManager;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
+        base.Start();
         stateManager = stateManagerContainer.GetComponent<StateManager>();
         videoManager = videoManagerContainer.GetComponent<VideoManager>();
+        sceneController = SceneControllerContainer.GetComponent<SceneController>();
         DownloadAndPlayVideo();
     }
 
@@ -24,6 +27,14 @@ public class Video360Controller : MonoBehaviour
         Dictionary<string, object> scene = ToursInfo.CurrentSceneData;
         if(!scene.ContainsKey("url"))
             return;
-        StartCoroutine(videoManager.DownloadAndPlayVideo((string)scene["url"]));
+        StartCoroutine(videoManager.DownloadAndPlayVideo((string)scene["url"], OnSceneEnded));
     }
+
+    void OnSceneEnded(string name)
+    {
+        Debug.Log(String.Format("On '${0}' Scene Ended", name));
+        if(sceneController)
+            sceneController.NextScene();
+    }
+
 }

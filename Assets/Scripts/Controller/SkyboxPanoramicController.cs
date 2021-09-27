@@ -1,8 +1,8 @@
 // https://stackoverflow.com/questions/45032579/editing-a-cubemap-skybox-from-remote-image
 // https://forum.unity.com/threads/how-to-set-a-skybox-from-an-image-url.420476/
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,10 +11,11 @@ public class SkyboxPanoramicController : SceneMonoBehaviour
     [Header("Next Prev Buttons auto hide")]
     public GameObject NextButton;
     public GameObject PrevButton;
-
+    protected bool auto = true;
     Dictionary<string, object> scene = null;
     List<string> pictures;
     int index = 0;
+
     FadeUtils controllerUtils = new FadeUtils();
     public void next()
     {
@@ -44,7 +45,6 @@ public class SkyboxPanoramicController : SceneMonoBehaviour
             has_prev = false;
         if(index == pictures.Count-1)
             has_next = false;
-
         NextButton.SetActive(has_next);
         PrevButton.SetActive(has_prev);
 
@@ -83,7 +83,7 @@ public class SkyboxPanoramicController : SceneMonoBehaviour
         // Fade out
         float startFade = RenderSettings.skybox.GetFloat("_Exposure");
         yield return StartCoroutine(controllerUtils.Interpolate(0.15f, startFade, 0.0f, onExposureUpdate));
-        // you can keep user rotation like so: TODO: add ability to rotate, keep and restore rotation
+        // TODO: you can keep user rotation like so: TODO: add ability to rotate, keep and restore rotation
         // RenderSettings.skybox.SetFloat("_Rotation", environment.m_worldRotation)
 
         // Set Texture
@@ -91,6 +91,21 @@ public class SkyboxPanoramicController : SceneMonoBehaviour
         // Fade in
         startFade = RenderSettings.skybox.GetFloat("_Exposure");
         yield return StartCoroutine(controllerUtils.Interpolate(0.15f, startFade, 1.0f, onExposureUpdate));
+        yield return Timer(OnNextPic);
+    }
+    void OnNextPic(float timePassed)
+    {
+        Debug.Log(String.Format("+++++ On Next Pic after {0} sec", timePassed));
+        if (sceneController && index == pictures.Count - 1)
+        {
+            Debug.Log("+++++ sceneController.NextScene");
+            sceneController.NextScene();
+        }
+        else
+        {
+            Debug.Log("+++++ next");
+            next();
+        }
     }
 
     //did not worked

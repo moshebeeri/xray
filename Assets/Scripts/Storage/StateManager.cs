@@ -75,10 +75,8 @@ public class StateManager : MonoBehaviour
     private List<Dictionary<string, object>> Extract(QuerySnapshot snapshot)
     {
         List<Dictionary<string, object>> docs = new List<Dictionary<string, object>> ();
-        int i = 0;
         foreach (DocumentSnapshot document in snapshot.Documents)
         {
-            Debug.Log(String.Format("Snapshot {0}", i++));
             Dictionary<string, object> tour = document.ToDictionary();
             tour["Id"] = document.Id;
             docs.Add(tour);

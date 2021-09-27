@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Firebase.Firestore;
 using UnityEngine.UI;
+using System;
 
 namespace Google.Maps.Examples {
   /// <summary>
@@ -15,7 +16,7 @@ namespace Google.Maps.Examples {
   /// inspector before pressing start, that location will be loaded instead.
   /// </remarks>
     [RequireComponent(typeof(MapsService))]
-    public class Map3DController : MonoBehaviour {
+    public class Map3DController : SceneMonoBehaviour {
         [Tooltip("LatLng to load (must be set before hitting play).")]
         public LatLng LatLng = new LatLng(40.6892199, -74.044601);
 
@@ -23,11 +24,21 @@ namespace Google.Maps.Examples {
         [Tooltip("Text input which info will be presented")]
         public Text info;
 
+
+
+        void OnNextScene(float time)
+        {
+            Debug.Log(String.Format("Map Scene Ended after {0} sec", time));
+            if(sceneController)
+                sceneController.NextScene();
+        }
+
         /// <summary>
         /// Use <see cref="MapsService"/> to load geometry.
         /// </summary>
-        private void Start() {
-        // Get required MapsService component on this GameObject.
+        private new void Start() {
+            base.Start();
+            // Get required MapsService component on this GameObject.
             MapsService mapsService = GetComponent<MapsService>();
             Dictionary<string, object> sceneData = ToursInfo.CurrentSceneData;
             //TODO: Hide the dialog incase no info provided.
@@ -47,6 +58,7 @@ namespace Google.Maps.Examples {
 
             // Load map with default options.
             mapsService.LoadMap(ExampleDefaults.DefaultBounds, ExampleDefaults.DefaultGameObjectOptions);
+            StartCoroutine(Timer(OnNextScene));
         //mapsService.LoadMap(new Bounds(Vector3.zero, new Vector3(10000, 0, 10000)), ExampleDefaults.DefaultGameObjectOptions);
 
         }
@@ -58,6 +70,8 @@ namespace Google.Maps.Examples {
         /// The communication between the game and the MapsSDK is done through APIs and event listeners.
         /// </remarks>
         public void OnLoaded(MapLoadedArgs args) {
+
+
         // The Map is loaded - you can start/resume gameplay from that point.
         // The new geometry is added under the GameObject that has MapsService as a component.
         }

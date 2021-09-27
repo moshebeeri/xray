@@ -22,6 +22,9 @@ public class BackgroundSkyboxController : MonoBehaviour
             case "TourSelectScene":
                 imageUrl = tour_select;
                 break;
+            case "VideoFlightScene":
+                imageUrl = tour_select;
+                break;
         }
 
         StartCoroutine(setImage(imageUrl));

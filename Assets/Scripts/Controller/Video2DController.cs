@@ -3,19 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Video2DController : MonoBehaviour
+public class Video2DController : SceneMonoBehaviour
 {
     [Header("Scripts")]
     public GameObject stateManagerContainer;
     public GameObject videoManagerContainer;
-    public GameObject SceneControllerContainer;
     StateManager stateManager;
     VideoManager videoManager;
-    SceneController sceneController;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
+        base.Start();
         stateManager = stateManagerContainer.GetComponent<StateManager>();
         videoManager = videoManagerContainer.GetComponent<VideoManager>();
         sceneController = SceneControllerContainer.GetComponent<SceneController>();
@@ -25,7 +24,8 @@ public class Video2DController : MonoBehaviour
     void OnSceneEnded(string name)
     {
         Debug.Log(String.Format("On '${0}' Scene Ended", name));
-        sceneController.NextScene();
+        if(sceneController)
+            sceneController.NextScene();
     }
 
     void DownloadAndPlayVideo()

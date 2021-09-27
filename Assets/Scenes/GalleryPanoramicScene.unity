@@ -234,7 +234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &146024458
 RectTransform:
   m_ObjectHideFlags: 0
@@ -251,8 +251,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -27.960049, y: -334}
-  m_SizeDelta: {x: 75, y: 75}
+  m_AnchoredPosition: {x: -44, y: -334}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &146024459
 MonoBehaviour:
@@ -405,8 +405,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 64, y: -334}
-  m_SizeDelta: {x: 75, y: 75}
+  m_AnchoredPosition: {x: 25.960047, y: -334}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &613729964
 MonoBehaviour:
@@ -641,8 +641,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -118, y: -334}
-  m_SizeDelta: {x: 75, y: 75}
+  m_AnchoredPosition: {x: -114.039955, y: -334}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &957324604
 MonoBehaviour:
@@ -934,11 +934,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a158df1963a94d989552354c6a705c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NextButton: {fileID: 613729962}
-  PrevButton: {fileID: 957324602}
   tourText: {fileID: 935395939}
   locationText: {fileID: 157489753}
   sceneText: {fileID: 408055079}
+  timeBetween: 6
+  SceneControllerContainer: {fileID: 1448422733}
+  NextButton: {fileID: 613729962}
+  PrevButton: {fileID: 957324602}
 --- !u!1001 &1448422731
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1051,6 +1053,11 @@ PrefabInstance:
 --- !u!224 &1448422732 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 497152356379265208, guid: 70195890ef558428ab01d796c42c8fee, type: 3}
+  m_PrefabInstance: {fileID: 1448422731}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1448422733 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 497152356742616791, guid: 70195890ef558428ab01d796c42c8fee, type: 3}
   m_PrefabInstance: {fileID: 1448422731}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1918711425
@@ -1274,6 +1281,10 @@ PrefabInstance:
     - target: {fileID: 6335637502304287307, guid: 7403b03377ce34164a6bd4e930a46490, type: 3}
       propertyPath: m_Name
       value: DescriptionPannel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6335637503592564879, guid: 7403b03377ce34164a6bd4e930a46490, type: 3}
+      propertyPath: m_text
+      value: "360\xBA Gallery"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7403b03377ce34164a6bd4e930a46490, type: 3}

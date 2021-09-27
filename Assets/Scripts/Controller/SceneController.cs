@@ -59,7 +59,7 @@ public class SceneController : MonoBehaviour
         bool showNextLocation = false;
         bool showPrevLocation = false;
 
-        bool LastLocation = ToursInfo.TourLocations.Count==0 || ToursInfo.CurrentLocationIndex == ToursInfo.TourLocations.Count - 1;
+        bool LastLocation = ToursInfo.CurrentLocationIndex == ToursInfo.TourLocations.Count - 1;
         bool LastScene = ToursInfo.CurrentSceneIndex == ((List<object>)ToursInfo.CurrentLocation["scenes"]).Count - 1;
 
         if( LastLocation && LastScene)
@@ -97,8 +97,12 @@ public class SceneController : MonoBehaviour
 		// 2. load next Assets and set it current
 		// 3. delete prev scene assets
 		object next = ToursInfo.NextScene();
-        if(next == null)
+        if (next == null)
+        {
+            //Do we have next location?
+            NextLocation();
             return;
+        }
         ToursInfo.NextSceneData = await stateManager.FetchScene(next);
         if(ToursInfo.PreviousSceneData != null)
             DeleteSceneData(ToursInfo.PreviousSceneData);
@@ -170,8 +174,8 @@ public class SceneController : MonoBehaviour
         object prev = ToursInfo.PrevScene();
 		if (prev == null)
 		{
-            Debug.Log("PreviousScene called with null prev");
-			return;
+            PrevLocation();
+            return;
 		}
 
         ToursInfo.PreviousSceneData = await stateManager.FetchScene(prev);
