@@ -17,6 +17,7 @@ public class SceneController : MonoBehaviour
     public GameObject prevScene;
     public GameObject nextLocation;
     public GameObject prevLocation;
+    private bool EndOfTour = false;
 
     // Start is called before the first frame update
     void Start()
@@ -65,6 +66,7 @@ public class SceneController : MonoBehaviour
         if( LastLocation && LastScene)
         {
             Debug.Log(String.Format("End of tour"));
+            EndOfTour = true;
         }else{
             showNextScene = ToursInfo.CurrentSceneIndex <  ((List<object>)ToursInfo.CurrentLocation["scenes"]).Count - 1;
             showPrevScene = ToursInfo.CurrentSceneIndex > 0;
@@ -93,12 +95,18 @@ public class SceneController : MonoBehaviour
     public async void NextScene()
     {
 		Debug.Log("NextScene");
+        if(EndOfTour)
+        {
+            Debug.Log("End of tour");
+            Loader.LoadToursSelectScene();
+        }
 		// 1. prev<-curr<-next
 		// 2. load next Assets and set it current
 		// 3. delete prev scene assets
 		object next = ToursInfo.NextScene();
         if (next == null)
         {
+            Debug.Log("ToursInfo.NextScene indicated for last scene call next location");
             //Do we have next location?
             NextLocation();
             return;

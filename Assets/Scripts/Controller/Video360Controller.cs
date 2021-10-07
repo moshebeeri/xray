@@ -35,6 +35,10 @@ public class Video360Controller : SceneMonoBehaviour
         Debug.Log(String.Format("On '${0}' Scene Ended", name));
         if(sceneController)
             sceneController.NextScene();
+        else
+        {
+            Debug.LogError(String.Format("Scene Ended ${0} yet scene controller is null", name));
+        }
     }
 
 }

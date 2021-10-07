@@ -146,7 +146,12 @@ public class VideoManager : MonoBehaviour
     private void OnLoop(VideoPlayer videoPlayer)
     {
         if(OnSceneEnded != null)
+        {
+            // videoPlayer.loopPointReached -= OnLoop;
             OnSceneEnded("VideoManager");
+            OnSceneEnded = null;
+        }
+
     }
 
     public IEnumerator DownloadAndPlayVideo(string url, UnityAction<string> OnSceneEnded = null)
