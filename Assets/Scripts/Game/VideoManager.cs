@@ -151,7 +151,6 @@ public class VideoManager : MonoBehaviour
             OnSceneEnded("VideoManager");
             OnSceneEnded = null;
         }
-
     }
 
     public IEnumerator DownloadAndPlayVideo(string url, UnityAction<string> OnSceneEnded = null)

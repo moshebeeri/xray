@@ -29,8 +29,11 @@ namespace Google.Maps.Examples {
         void OnNextScene(float time)
         {
             Debug.Log(String.Format("Map Scene Ended after {0} sec", time));
-            if(sceneController)
+            if (sceneController)
+            {
                 sceneController.NextScene();
+                sceneController = null;
+            }
         }
 
         /// <summary>

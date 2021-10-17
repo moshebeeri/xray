@@ -2,8 +2,8 @@
  * Based on the Google Maps for Unity Asset
  * https://www.assetstore.unity3d.com/en/#!/content/3573
  * However the relience on UniWeb has been removed
- * 
- * 
+ *
+ *
     Getting Started
     ---------------
     1. Assign the GoogleMap component to your game object.
@@ -11,9 +11,9 @@
     2. Setup the parameters in the inspector.
 
     2.1 If you want to control the center point and zoom level, make sure that
- 
+
        the Auto Locate Center box is unchecked. Otherwise the center point is
- 
+
        calculated using Markers and Path parameters.
 
     3. Each location field can be an address or longitude / latitude.
@@ -25,7 +25,7 @@
     5. The paths add straight lines on the map, between a set of locations.
 
     6. For in depth information on how the GoogleMap component uses the Google
-    Maps API, see: 
+    Maps API, see:
     https://developers.google.com/maps/documentation/staticmaps/#quick_example
  */
 using UnityEngine;
@@ -33,7 +33,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class GoogleMap : MonoBehaviour {
+public class Google2DMap : MonoBehaviour {
     public enum MapType {
         RoadMap,
         Satellite,

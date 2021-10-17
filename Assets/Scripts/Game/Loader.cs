@@ -55,6 +55,11 @@ public class Loader : MonoBehaviour
         SceneManager.LoadScene("VideoFlightScene");
     }
 
+    public static void LoadSkyCinemaScene()
+    {
+        SceneManager.LoadScene("SkyCinemaScene");
+    }
+
     public static void LoadScene(Dictionary<string, object> scene)
     {
         switch (scene["type"])
@@ -69,8 +74,13 @@ public class Loader : MonoBehaviour
                 Loader.LoadMapScene();
                 break;
             case "VideoFlight":
-                Loader.LoadVideoFlightScene();;
+                Loader.LoadVideoFlightScene();
                 break;
+            case "SkyCinema":
+                Loader.LoadSkyCinemaScene();
+                break;
+
+
             default:
                 break;
         }

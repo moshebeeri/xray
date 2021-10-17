@@ -146,7 +146,6 @@ public class SceneController : MonoBehaviour
                 }
             }
         }
-
     }
     async void PreparePrevSceneCache(){
         object prevRef = ToursInfo.PrevSceneRef();
@@ -274,6 +273,8 @@ public class SceneController : MonoBehaviour
         string type = (string)scene["type"];
         switch (type) {
             case "360Video":
+            case "VideoFlight":
+            case "SkyCinema":
                 CacheUtils.RemoveCacheVideo(scene);
                 break;
             case "360Gallery":
@@ -288,6 +289,8 @@ public class SceneController : MonoBehaviour
         string type = (string)scene["type"];
         switch (type) {
             case "360Video":
+            case "VideoFlight":
+            case "SkyCinema":
                 StartCoroutine(FetchAndCacheVideo(scene));
                 break;
             case "360Gallery":

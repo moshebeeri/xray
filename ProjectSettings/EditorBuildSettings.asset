@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/VideoFlightScene.unity
     guid: 775ee6a090301449781fe8634cb6c3b6
+  - enabled: 1
+    path: Assets/Scenes/SkyCinemaScene.unity
+    guid: eefe5d0ee12754751a23d556b622ff14
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3af63c10a0d4745e18e0d402d221d379, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: abb7174b586d24f7bb1c4a7d4b0a51e1, type: 2}

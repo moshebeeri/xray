@@ -23,7 +23,7 @@ public class Video2DController : SceneMonoBehaviour
 
     void OnSceneEnded(string name)
     {
-        Debug.Log(String.Format("On '${0}' Scene Ended", name));
+        Debug.Log(String.Format("On ${0} Scene Ended", name));
         if(sceneController)
             sceneController.NextScene();
     }
