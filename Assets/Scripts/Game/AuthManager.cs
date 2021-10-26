@@ -71,7 +71,7 @@ public class AuthManager : MonoBehaviour
                 if(auth.CurrentUser != null)
                 {
                     Debug.Log(String.Format("auth.CurrentUser.UserId {0}", auth.CurrentUser.UserId));
-                    StartCoroutine(LoadToursSelectScene(auth.CurrentUser.UserId));
+                    // StartCoroutine(LoadToursSelectScene(auth.CurrentUser.UserId));
                 }
             }
             else
@@ -153,6 +153,7 @@ public class AuthManager : MonoBehaviour
             confirmLoginText.text = "Logged In";
             PlayerPrefs.SetString("UserId", User.UserId);
             debugText.text = PlayerPrefs.GetString("UserId");
+            StartCoroutine(LoadToursSelectScene(User.UserId));
         }
     }
 
